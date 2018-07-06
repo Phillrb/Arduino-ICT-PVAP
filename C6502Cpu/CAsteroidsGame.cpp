@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017, Phillip Riscombe-Burton
+// Copyright (c) 2018, Phillip Riscombe-Burton
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -86,9 +86,9 @@ static const ROM_REGION s_romRegionSet1[] PROGMEM = { //
     {NO_BANK_SWITCH, s_ROM_ADDR_C1,  s_ROM_2716_SIZE, s_romData_1_C1,  0x7D4E3D05, "C1 "}, //J2 -  v1
     {0} }; // end of list
 
-ROM_REGION CAsteroidsGame::getAstRomset4(){ return s_romRegionSet4[] }
-ROM_REGION CAsteroidsGame::getAstRomset2(){ return s_romRegionSet2[] }
-ROM_REGION CAsteroidsGame::getAstRomset1(){ return s_romRegionSet1[] }
+ROM_REGION CAsteroidsGame::getAstRomset4(){ return *s_romRegionSet4; }
+ROM_REGION CAsteroidsGame::getAstRomset2(){ return *s_romRegionSet2; }
+ROM_REGION CAsteroidsGame::getAstRomset1(){ return *s_romRegionSet1; }
 
 //INPUT
 //2001 D7 3KHz - R
@@ -114,38 +114,38 @@ ROM_REGION CAsteroidsGame::getAstRomset1(){ return s_romRegionSet1[] }
 // Input region is the same for all ROM versions.
 //
 static const INPUT_REGION s_inputRegion[] PROGMEM = { //                                                         "012", "012345"
-                                                        {NO_BANK_SWITCH, 0x2001,  CAsteroidsBaseGame::s_MSK_D7,  "8B4", "3KHZ  "}, //INPUTS - pin 8 on B4
-                                                        {NO_BANK_SWITCH, 0x2002,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "HALT  "}, //L11 or L10 - pin 2
+    {NO_BANK_SWITCH, 0x2001,  CAsteroidsBaseGame::s_MSK_D7,  "8B4", "3KHZ  "}, //INPUTS - pin 8 on B4
+    {NO_BANK_SWITCH, 0x2002,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "HALT  "}, //L11 or L10 - pin 2
     
-                                                        {NO_BANK_SWITCH, 0x2003,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "HYPSPA"}, //PLAYER INPUT - L11 or L10 - pin 1
-                                                        {NO_BANK_SWITCH, 0x2004,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "FIRE  "}, // L11 or L10 - pin 15
+    {NO_BANK_SWITCH, 0x2003,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "HYPSPA"}, //PLAYER INPUT - L11 or L10 - pin 1
+    {NO_BANK_SWITCH, 0x2004,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "FIRE  "}, // L11 or L10 - pin 15
     
-                                                        {NO_BANK_SWITCH, 0x2005,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "DIASTP"}, //TEST INPUT // L11 or L10 - pin 14
-                                                        {NO_BANK_SWITCH, 0x2006,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "SLAM  "}, // L11 or L10 - pin 13
-                                                        {NO_BANK_SWITCH, 0x2007,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "SLFTST"}, // L11 or L10 - pin 12
+    {NO_BANK_SWITCH, 0x2005,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "DIASTP"}, //TEST INPUT // L11 or L10 - pin 14
+    {NO_BANK_SWITCH, 0x2006,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "SLAM  "}, // L11 or L10 - pin 13
+    {NO_BANK_SWITCH, 0x2007,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "SLFTST"}, // L11 or L10 - pin 12
     
-                                                        {NO_BANK_SWITCH, 0x2400,  CAsteroidsBaseGame::s_MSK_D7,  "J11", "LFT CN"}, //COIN //J11 or J10 - pin 4
-                                                        {NO_BANK_SWITCH, 0x2401,  CAsteroidsBaseGame::s_MSK_D7,  "J11", "CNT CN"}, //J11 or J10 - pin 3
-                                                        {NO_BANK_SWITCH, 0x2402,  CAsteroidsBaseGame::s_MSK_D7,  "J11", "RT CN "}, //J11 or J10 - pin 2
+    {NO_BANK_SWITCH, 0x2400,  CAsteroidsBaseGame::s_MSK_D7,  "J11", "LFT CN"}, //COIN //J11 or J10 - pin 4
+    {NO_BANK_SWITCH, 0x2401,  CAsteroidsBaseGame::s_MSK_D7,  "J11", "CNT CN"}, //J11 or J10 - pin 3
+    {NO_BANK_SWITCH, 0x2402,  CAsteroidsBaseGame::s_MSK_D7,  "J11", "RT CN "}, //J11 or J10 - pin 2
     
     
-                                                                                                                 //TODO - locations
-                                                        {NO_BANK_SWITCH, 0x2403,  CAsteroidsBaseGame::s_MSK_D7,  "???", "1PLYST"}, //MORE PLAYER INPUT
-                                                        {NO_BANK_SWITCH, 0x2404,  CAsteroidsBaseGame::s_MSK_D7,  "???", "2PLYST"},
-                                                        {NO_BANK_SWITCH, 0x2405,  CAsteroidsBaseGame::s_MSK_D7,  "???", "THRUST"},
-                                                        {NO_BANK_SWITCH, 0x2406,  CAsteroidsBaseGame::s_MSK_D7,  "???", "ROT R "},
-                                                        {NO_BANK_SWITCH, 0x2407,  CAsteroidsBaseGame::s_MSK_D7,  "???", "ROT L "},
+    //TODO - locations
+    {NO_BANK_SWITCH, 0x2403,  CAsteroidsBaseGame::s_MSK_D7,  "???", "1PLYST"}, //MORE PLAYER INPUT
+    {NO_BANK_SWITCH, 0x2404,  CAsteroidsBaseGame::s_MSK_D7,  "???", "2PLYST"},
+    {NO_BANK_SWITCH, 0x2405,  CAsteroidsBaseGame::s_MSK_D7,  "???", "THRUST"},
+    {NO_BANK_SWITCH, 0x2406,  CAsteroidsBaseGame::s_MSK_D7,  "???", "ROT R "},
+    {NO_BANK_SWITCH, 0x2407,  CAsteroidsBaseGame::s_MSK_D7,  "???", "ROT L "},
     
-                                                        {NO_BANK_SWITCH, 0x2800,  CAsteroidsBaseGame::s_MSK_D0,  "???", "SW1   "}, //OPT SWITCHES
-                                                        {NO_BANK_SWITCH, 0x2800,  CAsteroidsBaseGame::s_MSK_D1,  "???", "SW2   "},
-                                                        {NO_BANK_SWITCH, 0x2801,  CAsteroidsBaseGame::s_MSK_D0,  "???", "SW3   "},
-                                                        {NO_BANK_SWITCH, 0x2801,  CAsteroidsBaseGame::s_MSK_D1,  "???", "SW4   "},
-                                                        {NO_BANK_SWITCH, 0x2802,  CAsteroidsBaseGame::s_MSK_D0,  "???", "SW5   "},
-                                                        {NO_BANK_SWITCH, 0x2802,  CAsteroidsBaseGame::s_MSK_D1,  "???", "SW6   "},
-                                                        {NO_BANK_SWITCH, 0x2803,  CAsteroidsBaseGame::s_MSK_D0,  "???", "SW7   "},
-                                                        {NO_BANK_SWITCH, 0x2803,  CAsteroidsBaseGame::s_MSK_D1,  "???", "SW8   "},
-                                                      {0}
-                                                    }; // end of list
+    {NO_BANK_SWITCH, 0x2800,  CAsteroidsBaseGame::s_MSK_D0,  "???", "SW1   "}, //OPT SWITCHES
+    {NO_BANK_SWITCH, 0x2800,  CAsteroidsBaseGame::s_MSK_D1,  "???", "SW2   "},
+    {NO_BANK_SWITCH, 0x2801,  CAsteroidsBaseGame::s_MSK_D0,  "???", "SW3   "},
+    {NO_BANK_SWITCH, 0x2801,  CAsteroidsBaseGame::s_MSK_D1,  "???", "SW4   "},
+    {NO_BANK_SWITCH, 0x2802,  CAsteroidsBaseGame::s_MSK_D0,  "???", "SW5   "},
+    {NO_BANK_SWITCH, 0x2802,  CAsteroidsBaseGame::s_MSK_D1,  "???", "SW6   "},
+    {NO_BANK_SWITCH, 0x2803,  CAsteroidsBaseGame::s_MSK_D0,  "???", "SW7   "},
+    {NO_BANK_SWITCH, 0x2803,  CAsteroidsBaseGame::s_MSK_D1,  "???", "SW8   "},
+    {0}
+}; // end of list
 
 //OUTPUT
 
@@ -180,38 +180,38 @@ static const INPUT_REGION s_inputRegion[] PROGMEM = { //                        
 // Output region is the same for all ROM versions.
 //
 static const OUTPUT_REGION s_outputRegion[] PROGMEM = { //                                         "012", "012345"
-            //MIGHT BE ACTIVE LOW?
-            {NO_BANK_SWITCH, 0x3000, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "???", "DMAGO "},
-
-            {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D0,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "2P LMP"}, //PLAYER 2 LAMP
-            {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D1,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "1P LMP"}, //PLAYER 1 LAMP
-            {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D1,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "RAMSEL"}, //RAM SELECT
-            {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D3,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "CNCTLT"}, //COIN CONTROL LEFT
-            {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D4,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "CNCTCT"}, //COIN CONTROL MIDDLE
-            {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D5,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "CNCTRT"}, ////COIN CONTROL RIGHT
-
-            //MIGHT BE ACTIVE LOW?
-            {NO_BANK_SWITCH, 0x3400, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "???", "WD CLR"}, //WATCHDOG CLEAR
-
-            //                                                                                          "012", "012345"
-            {NO_BANK_SWITCH, 0x3600, CAsteroidsBaseGame::s_MSK_D6_D7,    CAsteroidsBaseGame::s_ACT_Hi,  "???", "EXPPIT"}, //EXPLOSION PITCH
-            {NO_BANK_SWITCH, 0x3600, CAsteroidsBaseGame::s_MSK_D2_TO_D5, CAsteroidsBaseGame::s_ACT_Hi,  "???", "EXPVOL"}, //EXPLOSION VOLUME
-
-            {NO_BANK_SWITCH, 0x3A00, CAsteroidsBaseGame::s_MSK_D4,       CAsteroidsBaseGame::s_ACT_Hi,  "???", "THMPVL"}, //THUMP VOLUME
-            {NO_BANK_SWITCH, 0x3A00, CAsteroidsBaseGame::s_MSK_D0_TO_D3, CAsteroidsBaseGame::s_ACT_Hi,  "???", "THMPFR"}, //THUMP FREQUENCY
-
-            //                                                                                     "012", "012345"
-            {NO_BANK_SWITCH, 0x3C00, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "SAUSND"}, //SAUCER SOUND
-            {NO_BANK_SWITCH, 0x3C01, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "SAFIRE"}, //SAUCER FIRE
-            {NO_BANK_SWITCH, 0x3C02, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "SSNDSL"}, //SAUCER SOUND SELECT
-            {NO_BANK_SWITCH, 0x3C03, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "THRSND"}, //THRUST SOUND
-            {NO_BANK_SWITCH, 0x3C04, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "FIRSND"}, //FIRE SOUND
-            {NO_BANK_SWITCH, 0x3C05, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "LIFSND"}, //LIFE SOUND
-
-            //MIGHT BE ACTIVE LOW?
-            {NO_BANK_SWITCH, 0x3E00, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "???", "NSERST"}, //NOISE RESET
-            {0}
-                                                      }; // end of list
+    //MIGHT BE ACTIVE LOW?
+    {NO_BANK_SWITCH, 0x3000, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "???", "DMAGO "},
+    
+    {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D0,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "2P LMP"}, //PLAYER 2 LAMP
+    {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D1,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "1P LMP"}, //PLAYER 1 LAMP
+    {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D1,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "RAMSEL"}, //RAM SELECT
+    {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D3,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "CNCTLT"}, //COIN CONTROL LEFT
+    {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D4,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "CNCTCT"}, //COIN CONTROL MIDDLE
+    {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D5,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "CNCTRT"}, ////COIN CONTROL RIGHT
+    
+    //MIGHT BE ACTIVE LOW?
+    {NO_BANK_SWITCH, 0x3400, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "???", "WD CLR"}, //WATCHDOG CLEAR
+    
+    //                                                                                          "012", "012345"
+    {NO_BANK_SWITCH, 0x3600, CAsteroidsBaseGame::s_MSK_D6_D7,    CAsteroidsBaseGame::s_ACT_Hi,  "???", "EXPPIT"}, //EXPLOSION PITCH
+    {NO_BANK_SWITCH, 0x3600, CAsteroidsBaseGame::s_MSK_D2_TO_D5, CAsteroidsBaseGame::s_ACT_Hi,  "???", "EXPVOL"}, //EXPLOSION VOLUME
+    
+    {NO_BANK_SWITCH, 0x3A00, CAsteroidsBaseGame::s_MSK_D4,       CAsteroidsBaseGame::s_ACT_Hi,  "???", "THMPVL"}, //THUMP VOLUME
+    {NO_BANK_SWITCH, 0x3A00, CAsteroidsBaseGame::s_MSK_D0_TO_D3, CAsteroidsBaseGame::s_ACT_Hi,  "???", "THMPFR"}, //THUMP FREQUENCY
+    
+    //                                                                                     "012", "012345"
+    {NO_BANK_SWITCH, 0x3C00, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "SAUSND"}, //SAUCER SOUND
+    {NO_BANK_SWITCH, 0x3C01, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "SAFIRE"}, //SAUCER FIRE
+    {NO_BANK_SWITCH, 0x3C02, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "SSNDSL"}, //SAUCER SOUND SELECT
+    {NO_BANK_SWITCH, 0x3C03, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "THRSND"}, //THRUST SOUND
+    {NO_BANK_SWITCH, 0x3C04, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "FIRSND"}, //FIRE SOUND
+    {NO_BANK_SWITCH, 0x3C05, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "LIFSND"}, //LIFE SOUND
+    
+    //MIGHT BE ACTIVE LOW?
+    {NO_BANK_SWITCH, 0x3E00, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "???", "NSERST"}, //NOISE RESET
+    {0}
+}; // end of list
 
 IGame*
 CAsteroidsGame::createInstanceSet4(
@@ -256,12 +256,12 @@ CAsteroidsGame::createInstanceClockMasterSet1(
 }
 
 CAsteroidsGame::CAsteroidsGame(
-    const bool       clockMaster,
-    const ROM_REGION *romRegion
-) : CAsteroidsBaseGame( clockMaster,
-                           romRegion,
-                           s_inputRegion,
-                           s_outputRegion )
+                               const bool       clockMaster,
+                               const ROM_REGION *romRegion
+                               ) : CAsteroidsBaseGame( clockMaster,
+romRegion,
+                                                      s_inputRegion,
+                                                      s_outputRegion )
 {
 }
 

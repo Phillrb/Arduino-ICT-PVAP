@@ -6,4 +6,5 @@ https://github.com/prswan/arduino-mega-ict
 
 Currently adding support for:
 - Asteroids
+- Lunar Lander
 - Pacland

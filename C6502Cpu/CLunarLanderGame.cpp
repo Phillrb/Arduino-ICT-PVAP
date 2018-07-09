@@ -93,125 +93,85 @@ ROM_REGION CLunarLanderGame::getLLanderRomset1(){
 }
 
 //INPUT
-//2001 D7 3KHz - R
-//2002 D7 HALT - R
-//2003 D7 Hyperspace SW - R
-//2004 D7 Fire - R
-//2005 D7 Diag step - R
-//2006 D7 Slam sw - R
-//2007 D7 Self test sw - R
+//2000 D0 HALT
+//2000 D1 TEST SW
+//2000 D2 SLAM SW
+//2000 D6 3KHz
+//2000 D7 DIA STEP
 
-//2400 D7 Left coin SW - R
-//2401 D7 Center coin SW - R
-//2402 D7 Right coin SW - R
-//2403 D7 1 Player start - R
-//2404 D7 2 Player start - R
-//2405 D7 Thrust - R
-//2406 D7 ROT right - R
-//2407 D7 ROT left - R
+//2400 D7       START
+//2401 D7       COIN 3
+//2402 D7       COIN 2
+//2403 D7       COIN 1
+//2404 D7       GAME SELECT
+//2405 D7       ABORT
+//2406 D7       ROT RIGHT
+//2407 D7       ROT LEFT
 
-//2800 - 2803 D0,D1 - R OPT switches SW1 -> SW8 - R
+//2800 D0 D1    OPTION
+//2801 D0 D1    OPTION
+//2802 D0 D1    OPTION
+//2803 D0 D1    OPTION
+//2C00 D0-D7    POT IN
 
 //
 // Input region is the same for all ROM versions.
 //
-static const INPUT_REGION s_inputRegion[] PROGMEM = { //                                                         "012", "012345"
-//                                                        {NO_BANK_SWITCH, 0x2001,  CAsteroidsBaseGame::s_MSK_D7,  "8B4", "3KHZ  "}, //INPUTS - pin 8 on B4
-//                                                        {NO_BANK_SWITCH, 0x2002,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "HALT  "}, //L11 or L10 - pin 2
-//
-//                                                        {NO_BANK_SWITCH, 0x2003,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "HYPSPA"}, //PLAYER INPUT - L11 or L10 - pin 1
-//                                                        {NO_BANK_SWITCH, 0x2004,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "FIRE  "}, // L11 or L10 - pin 15
-//
-//                                                        {NO_BANK_SWITCH, 0x2005,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "DIASTP"}, //TEST INPUT // L11 or L10 - pin 14
-//                                                        {NO_BANK_SWITCH, 0x2006,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "SLAM  "}, // L11 or L10 - pin 13
-//                                                        {NO_BANK_SWITCH, 0x2007,  CAsteroidsBaseGame::s_MSK_D7,  "L11", "SLFTST"}, // L11 or L10 - pin 12
-//
-//                                                        {NO_BANK_SWITCH, 0x2400,  CAsteroidsBaseGame::s_MSK_D7,  "J11", "LFT CN"}, //COIN //J11 or J10 - pin 4
-//                                                        {NO_BANK_SWITCH, 0x2401,  CAsteroidsBaseGame::s_MSK_D7,  "J11", "CNT CN"}, //J11 or J10 - pin 3
-//                                                        {NO_BANK_SWITCH, 0x2402,  CAsteroidsBaseGame::s_MSK_D7,  "J11", "RT CN "}, //J11 or J10 - pin 2
-//
-//
-//                                                                                                                 //TODO - locations
-//                                                        {NO_BANK_SWITCH, 0x2403,  CAsteroidsBaseGame::s_MSK_D7,  "???", "1PLYST"}, //MORE PLAYER INPUT
-//                                                        {NO_BANK_SWITCH, 0x2404,  CAsteroidsBaseGame::s_MSK_D7,  "???", "2PLYST"},
-//                                                        {NO_BANK_SWITCH, 0x2405,  CAsteroidsBaseGame::s_MSK_D7,  "???", "THRUST"},
-//                                                        {NO_BANK_SWITCH, 0x2406,  CAsteroidsBaseGame::s_MSK_D7,  "???", "ROT R "},
-//                                                        {NO_BANK_SWITCH, 0x2407,  CAsteroidsBaseGame::s_MSK_D7,  "???", "ROT L "},
-//
-//                                                        {NO_BANK_SWITCH, 0x2800,  CAsteroidsBaseGame::s_MSK_D0,  "???", "SW1   "}, //OPT SWITCHES
-//                                                        {NO_BANK_SWITCH, 0x2800,  CAsteroidsBaseGame::s_MSK_D1,  "???", "SW2   "},
-//                                                        {NO_BANK_SWITCH, 0x2801,  CAsteroidsBaseGame::s_MSK_D0,  "???", "SW3   "},
-//                                                        {NO_BANK_SWITCH, 0x2801,  CAsteroidsBaseGame::s_MSK_D1,  "???", "SW4   "},
-//                                                        {NO_BANK_SWITCH, 0x2802,  CAsteroidsBaseGame::s_MSK_D0,  "???", "SW5   "},
-//                                                        {NO_BANK_SWITCH, 0x2802,  CAsteroidsBaseGame::s_MSK_D1,  "???", "SW6   "},
-//                                                        {NO_BANK_SWITCH, 0x2803,  CAsteroidsBaseGame::s_MSK_D0,  "???", "SW7   "},
-//                                                        {NO_BANK_SWITCH, 0x2803,  CAsteroidsBaseGame::s_MSK_D1,  "???", "SW8   "},
+static const INPUT_REGION s_inputRegion[] PROGMEM = { //                                                           "012", "012345"
+                                                        {NO_BANK_SWITCH, 0x2000,  CLunarLanderBaseGame::s_MSK_D0,  "M10", "HALT  "}, //INPUTS - M10 pin 7 (buffer)
+                                                        {NO_BANK_SWITCH, 0x2000,  CLunarLanderBaseGame::s_MSK_D1,  "M10", "TEST  "}, // M10 pin 11
+                                                        {NO_BANK_SWITCH, 0x2000,  CLunarLanderBaseGame::s_MSK_D2,  "M10", "SLAM  "}, // M10 pin 5
+                                                        {NO_BANK_SWITCH, 0x2000,  CLunarLanderBaseGame::s_MSK_D6,  "M10", "3KHZ  "}, // M10 pin 13
+                                                        {NO_BANK_SWITCH, 0x2000,  CLunarLanderBaseGame::s_MSK_D7,  "M10", "DIASTP"}, // M10 pin 3
+
+                                                        {NO_BANK_SWITCH, 0x2400,  CLunarLanderBaseGame::s_MSK_D7,  "K10", "START "}, // K10 pin 6 - pins 9,10,11 all low (AB2, AB1, AB0) (mux) - driven by pin 4
+                                                        {NO_BANK_SWITCH, 0x2401,  CLunarLanderBaseGame::s_MSK_D7,  "K10", "COIN 3"}, // K10 pin 6 ????? - DONT SEE ON SCHEMATICS
+                                                        {NO_BANK_SWITCH, 0x2402,  CLunarLanderBaseGame::s_MSK_D7,  "K10", "COIN 2"}, // K10 pin 6
+                                                        {NO_BANK_SWITCH, 0x2403,  CLunarLanderBaseGame::s_MSK_D7,  "K10", "COIN 1"}, // K10 pin 6
+                                                        {NO_BANK_SWITCH, 0x2404,  CLunarLanderBaseGame::s_MSK_D7,  "K10", "SELECT"}, // K10 pin 6 (pin 15 driven)
+                                                        {NO_BANK_SWITCH, 0x2405,  CLunarLanderBaseGame::s_MSK_D7,  "K10", "ABORT "}, // K10 pin 6 (pin 14 driven)
+                                                        {NO_BANK_SWITCH, 0x2406,  CLunarLanderBaseGame::s_MSK_D7,  "K10", "ROT R "}, // K10 pin 6 (pin 13 driven)
+                                                        {NO_BANK_SWITCH, 0x2407,  CLunarLanderBaseGame::s_MSK_D7,  "K10", "ROT L "}, // K10 pin 6 (pin 12 driven)
+
+                                                        {NO_BANK_SWITCH, 0x2800,  CLunarLanderBaseGame::s_MSK_D0,  "N8 ", "SW1   "}, //OPT SWITCHES
+                                                        {NO_BANK_SWITCH, 0x2800,  CLunarLanderBaseGame::s_MSK_D1,  "N8 ", "SW2   "},
+                                                        {NO_BANK_SWITCH, 0x2801,  CLunarLanderBaseGame::s_MSK_D0,  "N8 ", "SW3   "},
+                                                        {NO_BANK_SWITCH, 0x2801,  CLunarLanderBaseGame::s_MSK_D1,  "N8 ", "SW4   "},
+                                                        {NO_BANK_SWITCH, 0x2802,  CLunarLanderBaseGame::s_MSK_D0,  "N8 ", "SW5   "},
+                                                        {NO_BANK_SWITCH, 0x2802,  CLunarLanderBaseGame::s_MSK_D1,  "N8 ", "SW6   "},
+                                                        {NO_BANK_SWITCH, 0x2803,  CLunarLanderBaseGame::s_MSK_D0,  "N8 ", "SW7   "},
+                                                        {NO_BANK_SWITCH, 0x2803,  CLunarLanderBaseGame::s_MSK_D1,  "N8 ", "SW8   "},
+    
+                                                        {NO_BANK_SWITCH, 0x2C00,  CLunarLanderBaseGame::s_MSK_ALL, "N9 ", "POT IN"}, //THRUST IN VAL
                                                       {0}
                                                     }; // end of list
 
 //OUTPUT
 
-//3000 -> 00000000 DMAGO - W
+//3200 D0 LAMP 0
+//3200 D1 LAMP 1
+//3200 D2 LAMP 2
+//3200 D3 LAMP 3
+//3200 D4 START SELECT LEDS
+//3200 D5 COIN COUNTER
 
-//3200 -> D0 2 PLAYER LAMP - W
-//3200 -> D1 1 PLAYER LAMP - W
-//3200 -> D2 RAMSEL - W
-//3200 -> D3 COIN CNTRL LEFT - W
-//3200 -> D4 COIN CNTRL MIDDLE - W
-//3200 -> D5 COIN CNTRL RIGHT - W
-
-//3400 -> 00000000 WDCLR - W
-
-//3600 -> D6,D7 EXPLOSION PITCH - W
-//3600 -> D2->D5 EXPLOSION VOLUME - W
-
-//3A00 -> D4 - THUMP VOLUME - W
-//3A00 -> D0->D3 - THUMP FREQ - W
-
-//3C00 -> D7 - SAUCER SND - W
-//3C01 -> D7 - SAUCER FIRE SND - W
-//3C02 -> D7 - SAUCER SND SELECT - W
-//3C03 -> D7 - SHIP THRUST SND - W
-//3C04 -> D7 - SHIP FIRE SND - W
-//3C05 -> D7 - LIFE SND - W
-
-//3E00 -> 00000000 NOISE RESET - W
+//3C00 D0 D1 D2 THRUST INTENSITY
+//3C00 D3       THRUST PITCH
+//3C00 D4 D5    TONE INTENSITY
+//3E00 ???      NOISE RESET
 
 
 //
 // Output region is the same for all ROM versions.
 //
-static const OUTPUT_REGION s_outputRegion[] PROGMEM = { //                                         "012", "012345"
-            //MIGHT BE ACTIVE LOW?
-//            {NO_BANK_SWITCH, 0x3000, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "???", "DMAGO "},
-//
-//            {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D0,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "2P LMP"}, //PLAYER 2 LAMP
-//            {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D1,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "1P LMP"}, //PLAYER 1 LAMP
-//            {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D1,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "RAMSEL"}, //RAM SELECT
-//            {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D3,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "CNCTLT"}, //COIN CONTROL LEFT
-//            {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D4,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "CNCTCT"}, //COIN CONTROL MIDDLE
-//            {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D5,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "CNCTRT"}, ////COIN CONTROL RIGHT
-//
-//            //MIGHT BE ACTIVE LOW?
-//            {NO_BANK_SWITCH, 0x3400, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "???", "WD CLR"}, //WATCHDOG CLEAR
-//
-//            //                                                                                          "012", "012345"
-//            {NO_BANK_SWITCH, 0x3600, CAsteroidsBaseGame::s_MSK_D6_D7,    CAsteroidsBaseGame::s_ACT_Hi,  "???", "EXPPIT"}, //EXPLOSION PITCH
-//            {NO_BANK_SWITCH, 0x3600, CAsteroidsBaseGame::s_MSK_D2_TO_D5, CAsteroidsBaseGame::s_ACT_Hi,  "???", "EXPVOL"}, //EXPLOSION VOLUME
-//
-//            {NO_BANK_SWITCH, 0x3A00, CAsteroidsBaseGame::s_MSK_D4,       CAsteroidsBaseGame::s_ACT_Hi,  "???", "THMPVL"}, //THUMP VOLUME
-//            {NO_BANK_SWITCH, 0x3A00, CAsteroidsBaseGame::s_MSK_D0_TO_D3, CAsteroidsBaseGame::s_ACT_Hi,  "???", "THMPFR"}, //THUMP FREQUENCY
-//
-//            //                                                                                     "012", "012345"
-//            {NO_BANK_SWITCH, 0x3C00, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "SAUSND"}, //SAUCER SOUND
-//            {NO_BANK_SWITCH, 0x3C01, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "SAFIRE"}, //SAUCER FIRE
-//            {NO_BANK_SWITCH, 0x3C02, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "SSNDSL"}, //SAUCER SOUND SELECT
-//            {NO_BANK_SWITCH, 0x3C03, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "THRSND"}, //THRUST SOUND
-//            {NO_BANK_SWITCH, 0x3C04, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "FIRSND"}, //FIRE SOUND
-//            {NO_BANK_SWITCH, 0x3C05, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "LIFSND"}, //LIFE SOUND
-//
-//            //MIGHT BE ACTIVE LOW?
-//            {NO_BANK_SWITCH, 0x3E00, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "???", "NSERST"}, //NOISE RESET
+static const OUTPUT_REGION s_outputRegion[] PROGMEM = { //                                             "012", "012345"
+            {NO_BANK_SWITCH, 0x3200, CLunarLanderBaseGame::s_MSK_D0,  CLunarLanderBaseGame::s_ACT_Hi,  "???", "LAMP 0"},
+            {NO_BANK_SWITCH, 0x3200, CLunarLanderBaseGame::s_MSK_D1,  CLunarLanderBaseGame::s_ACT_Hi,  "???", "LAMP 1"},
+            {NO_BANK_SWITCH, 0x3200, CLunarLanderBaseGame::s_MSK_D2,  CLunarLanderBaseGame::s_ACT_Hi,  "???", "LAMP 2"},
+            {NO_BANK_SWITCH, 0x3200, CLunarLanderBaseGame::s_MSK_D3,  CLunarLanderBaseGame::s_ACT_Hi,  "???", "LAMP 3"},
+            {NO_BANK_SWITCH, 0x3200, CLunarLanderBaseGame::s_MSK_D4,  CLunarLanderBaseGame::s_ACT_Hi,  "???", "S LEDS"},
+            {NO_BANK_SWITCH, 0x3200, CLunarLanderBaseGame::s_MSK_D5,  CLunarLanderBaseGame::s_ACT_Hi,  "???", "CNCTRT"},
+
             {0}
                                                       }; // end of list
 

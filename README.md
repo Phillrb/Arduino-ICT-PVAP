@@ -9,6 +9,8 @@ Currently adding support for:
 - Lunar Lander
 - Pacland
 
+Simply pull down the Paul Swan repo at https://github.com/prswan/arduino-mega-ict and then add or overwrite some of the files with those supplied in this repo.
+
 # Sainsmart LCD shield support
 The [DFR_Key.cpp](/libraries/DFR_Key/DFR_Key.cpp) file is configured for my own LCD shield as the threshold values for the buttons on the shield differs from that supported in the original Paul Swan repo. You will probably need to adjust the values for your own LCD shield.
 

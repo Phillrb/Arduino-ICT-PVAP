@@ -14,6 +14,10 @@ Simply pull down the Paul Swan repo at https://github.com/prswan/arduino-mega-ic
 Original discussion thread on UKVac:
 http://www.ukvac.com/forum/arduino-incircuit-tester-build-project_topic349525.html
 
+# ICT Shields
+I needed to make a version of the ICT shield without resistors as they were affecting the readings on Asteroids.
+It's available at https://oshpark.com/shared_projects/3XwrbmAy if you want to print your own.
+
 # Sainsmart LCD shield support
 The [DFR_Key.cpp](/libraries/DFR_Key/DFR_Key.cpp) file is configured for my own LCD shield as the threshold values for the buttons on the shield differs from that supported in the original Paul Swan repo. You will probably need to adjust the values for your own LCD shield.
 

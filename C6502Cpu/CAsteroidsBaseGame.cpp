@@ -49,7 +49,8 @@
 // RAM region is the same for all versions.
 //
 static const RAM_REGION s_ramRegion[] PROGMEM = { //            "012", "012345"
-            {NO_BANK_SWITCH, 0x0000,      0x01FF,      1, 0x0F, "D2Z", "Prog. "}, // "Program RAM, 2114 - lower"
+            {NO_BANK_SWITCH, 0x0000,      0x00FF,      1, 0x0F, "D2A", "Prog. "}, // "Program RAM, 2114 - lower" 0 page
+            {NO_BANK_SWITCH, 0x0100,      0x01FF,      1, 0x0F, "D2Z", "Prog. "}, // "Program RAM, 2114 - lower"
             {NO_BANK_SWITCH, 0x0200,      0x02FF,      1, 0x0F, "D2O", "Prog. "}, // "Program RAM, 2114 - lower"
             {NO_BANK_SWITCH, 0x0300,      0x03FF,      1, 0x0F, "D2T", "Prog. "}, // "Program RAM, 2114 - lower"
 

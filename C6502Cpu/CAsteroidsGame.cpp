@@ -180,18 +180,19 @@ static const INPUT_REGION s_inputRegion[] PROGMEM = { //                        
 // Output region is the same for all ROM versions.
 //
 static const OUTPUT_REGION s_outputRegion[] PROGMEM = { //                                         "012", "012345"
-    //MIGHT BE ACTIVE LOW?
-    {NO_BANK_SWITCH, 0x3000, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "???", "DMAGO "},
+    
+    //Data bus agnostic
+    {NO_BANK_SWITCH, 0x3000, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "L6 ", "DMAGO "},
     
     {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D0,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "2P LMP"}, //PLAYER 2 LAMP
     {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D1,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "1P LMP"}, //PLAYER 1 LAMP
-    {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D1,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "RAMSEL"}, //RAM SELECT
+    {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D2,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "RAMSEL"}, //RAM SELECT
     {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D3,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "CNCTLT"}, //COIN CONTROL LEFT
     {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D4,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "CNCTCT"}, //COIN CONTROL MIDDLE
-    {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D5,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "CNCTRT"}, ////COIN CONTROL RIGHT
+    {NO_BANK_SWITCH, 0x3200, CAsteroidsBaseGame::s_MSK_D5,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "CNCTRT"}, //COIN CONTROL RIGHT
     
-    //MIGHT BE ACTIVE LOW?
-    {NO_BANK_SWITCH, 0x3400, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "???", "WD CLR"}, //WATCHDOG CLEAR
+    //Data bus agnostic
+    {NO_BANK_SWITCH, 0x3400, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "L6 ", "WD CLR"}, //WATCHDOG CLEAR
     
     //                                                                                          "012", "012345"
     {NO_BANK_SWITCH, 0x3600, CAsteroidsBaseGame::s_MSK_D6_D7,    CAsteroidsBaseGame::s_ACT_Hi,  "???", "EXPPIT"}, //EXPLOSION PITCH
@@ -208,8 +209,8 @@ static const OUTPUT_REGION s_outputRegion[] PROGMEM = { //                      
     {NO_BANK_SWITCH, 0x3C04, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "FIRSND"}, //FIRE SOUND
     {NO_BANK_SWITCH, 0x3C05, CAsteroidsBaseGame::s_MSK_D7,  CAsteroidsBaseGame::s_ACT_Hi,  "???", "LIFSND"}, //LIFE SOUND
     
-    //MIGHT BE ACTIVE LOW?
-    {NO_BANK_SWITCH, 0x3E00, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "???", "NSERST"}, //NOISE RESET
+    //Data bus agnostic
+    {NO_BANK_SWITCH, 0x3E00, CAsteroidsBaseGame::s_MSK_ALL, CAsteroidsBaseGame::s_ACT_Hi,  "L6 ", "NSERST"}, //NOISE RESET
     {0}
 }; // end of list
 

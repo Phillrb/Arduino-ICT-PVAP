@@ -197,18 +197,15 @@ static const INPUT_REGION s_inputRegion[] PROGMEM = { //     "012", "012345"
     {NO_BANK_SWITCH, 0x2406,  CAsteroidsBaseGame::s_MSK_D7,  "J10", "ROT R "}, // J10 - pin 13
     {NO_BANK_SWITCH, 0x2407,  CAsteroidsBaseGame::s_MSK_D7,  "J10", "ROT L "}, // J10 - pin 12
     
-    // DIP SWITCH INPUTS (Combined)
-    {NO_BANK_SWITCH, 0x2800,  CAsteroidsBaseGame::s_MSK_ALL, "P5 ", "SW ALL"}, // All option switches as a byte
-
-    // DIP SWITCH INPUTS (Individual)
-    // {NO_BANK_SWITCH, 0x2800,  CAsteroidsBaseGame::s_MSK_D0,  "P5 ", "SW1   "}, // P5 - pin 6
-    // {NO_BANK_SWITCH, 0x2800,  CAsteroidsBaseGame::s_MSK_D1,  "P5 ", "SW2   "}, // P5 - pin 5
-    // {NO_BANK_SWITCH, 0x2801,  CAsteroidsBaseGame::s_MSK_D0,  "P5 ", "SW3   "}, // P5 - pin 4
-    // {NO_BANK_SWITCH, 0x2801,  CAsteroidsBaseGame::s_MSK_D1,  "P5 ", "SW4   "}, // P5 - pin 3
-    // {NO_BANK_SWITCH, 0x2802,  CAsteroidsBaseGame::s_MSK_D0,  "P5 ", "SW5   "}, // P5 - pin 10
-    // {NO_BANK_SWITCH, 0x2802,  CAsteroidsBaseGame::s_MSK_D1,  "P5 ", "SW6   "}, // P5 - pin 11
-    // {NO_BANK_SWITCH, 0x2803,  CAsteroidsBaseGame::s_MSK_D0,  "P5 ", "SW7   "}, // P5 - pin 12
-    // {NO_BANK_SWITCH, 0x2803,  CAsteroidsBaseGame::s_MSK_D1,  "P5 ", "SW8   "}, // P5 - pin 13
+    // DIP SWITCH INPUTS
+    {NO_BANK_SWITCH, 0x2803,  CAsteroidsBaseGame::s_MSK_D0,  "P5 ", "SW1   "}, // P5 - pin 3
+    {NO_BANK_SWITCH, 0x2803,  CAsteroidsBaseGame::s_MSK_D1,  "P5 ", "SW2   "}, // P5 - pin 13
+    {NO_BANK_SWITCH, 0x2802,  CAsteroidsBaseGame::s_MSK_D0,  "P5 ", "SW3   "}, // P5 - pin 4
+    {NO_BANK_SWITCH, 0x2802,  CAsteroidsBaseGame::s_MSK_D1,  "P5 ", "SW4   "}, // P5 - pin 12
+    {NO_BANK_SWITCH, 0x2801,  CAsteroidsBaseGame::s_MSK_D0,  "P5 ", "SW5   "}, // P5 - pin 5
+    {NO_BANK_SWITCH, 0x2801,  CAsteroidsBaseGame::s_MSK_D1,  "P5 ", "SW6   "}, // P5 - pin 11
+    {NO_BANK_SWITCH, 0x2800,  CAsteroidsBaseGame::s_MSK_D0,  "P5 ", "SW7   "}, // P5 - pin 6
+    {NO_BANK_SWITCH, 0x2800,  CAsteroidsBaseGame::s_MSK_D1,  "P5 ", "SW8   "}, // P5 - pin 10
     {0}
 }; // end of list
 

@@ -105,11 +105,11 @@ CAsteroidsBaseGame::CAsteroidsBaseGame(
 {
     if (clockMaster)
     {
-        m_cpu = new C6502ClockMasterCpu(0);
+        m_cpu = new C6502ClockMasterCpu(false);
     }
     else
     {
-        m_cpu = new C6502Cpu();
+        m_cpu = new C6502Cpu(false);
     }
 
     m_cpu->idle();

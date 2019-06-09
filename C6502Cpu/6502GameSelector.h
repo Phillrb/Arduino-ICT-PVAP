@@ -26,6 +26,7 @@
 #include <CTomahawk777Game.h>
 #include <CAsteroidsGame.h>
 #include <CAsteroidsDeluxeGame.h>
+#include <CBattlezoneGame.h>
 #include <CLunarLanderGame.h>
 
 //
@@ -48,6 +49,10 @@ static const SELECTOR s_gameSelector[] PROGMEM = {//0123456789abcde
     {"AstDlx (2) clk ",  onSelectGame,    (void*) (CAsteroidsDeluxeGame::createInstanceClockMasterSet2),   false},
     {"AstDlx (1)     ",  onSelectGame,    (void*) (CAsteroidsDeluxeGame::createInstanceSet1),              false},
     {"AstDlx (1) clk ",  onSelectGame,    (void*) (CAsteroidsDeluxeGame::createInstanceClockMasterSet1),   false},
+    {"BZone (2)      ",  onSelectGame,    (void*) (CBattlezoneGame::createInstanceSet2),             false},
+    {"BZone (2) clk  ",  onSelectGame,    (void*) (CBattlezoneGame::createInstanceClockMasterSet2),  false},
+    {"BZone (1)      ",  onSelectGame,    (void*) (CBattlezoneGame::createInstanceSet1),             false},
+    {"BZone (1) clk  ",  onSelectGame,    (void*) (CBattlezoneGame::createInstanceClockMasterSet1),  false},
     {"LLander (2)    ",  onSelectGame,    (void*) (CLunarLanderGame::createInstanceSet2),            false},
     {"LLander (2) clk",  onSelectGame,    (void*) (CLunarLanderGame::createInstanceClockMasterSet2), false},
     {"LLander (1)    ",  onSelectGame,    (void*) (CLunarLanderGame::createInstanceSet1),            false},

@@ -7,6 +7,7 @@ https://github.com/prswan/arduino-mega-ict
 Currently adding support for:
 - Asteroids
 - Asteroids Deluxe
+- Battlezone - by @wondras
 - Lunar Lander
 - Pacland
 - Punch-Out!!

@@ -27,6 +27,8 @@
 #include "C6502ClockMasterCpu.h"
 #include <DFR_Key.h>
 #include "CRomCheck.h"
+#include "PinMap.h"
+#include "6502PinDescription.h"
 
 //
 // RAM region is the same for all versions.
@@ -78,6 +80,11 @@ static const RAM_REGION s_ramRegionWriteOnly[] PROGMEM = { {0} }; // end of list
 // Custom functions
 //
 static const CUSTOM_FUNCTION s_customFunction[] PROGMEM = {
+    //                                       "0123456789"
+    {CAtariAVGBaseGame::pokeyIdle,           "PKY Idle  "},
+    {CAtariAVGBaseGame::pokeySoundTest,      "PKY Sound "},
+    {CAtariAVGBaseGame::pokeySwitchTest,     "PKY Switch"},
+    {CAtariAVGBaseGame::pokeyRandomTest,     "PKY Random"},
     {NO_CUSTOM_FUNCTION} // end of list
 };
 
@@ -86,7 +93,8 @@ CAtariAVGBaseGame::CAtariAVGBaseGame(
     const bool          clockMaster,
     const ROM_REGION    *romRegion,
     const INPUT_REGION  *inputRegion,
-    const OUTPUT_REGION *outputRegion
+    const OUTPUT_REGION *outputRegion,
+    const UINT32        pokeyAddress
 ) : CGame( romRegion,
            s_ramRegion,
            s_ramRegionByteOnly,
@@ -110,6 +118,9 @@ CAtariAVGBaseGame::CAtariAVGBaseGame(
     // NMI is connected to a 250 Hz timer, which is disabled when the game's self-test switch is closed
     m_interrupt = ICpu::NMI;
     m_interruptAutoVector = true;
+    
+    m_clkPin = new CFastPin(g_pinMap40DIL, &s_CLK2o_o);
+    m_pokey = new CPOKEY(m_cpu, pokeyAddress, m_clkPin);
 }
 
 
@@ -118,6 +129,12 @@ CAtariAVGBaseGame::~CAtariAVGBaseGame(
 {
     delete m_cpu;
     m_cpu = (ICpu *) NULL;
+
+    delete m_pokey;
+    m_pokey = (CPOKEY *) NULL;
+
+    delete m_clkPin;
+    m_clkPin = (CFastPin *) NULL;
 }
 
 //
@@ -160,3 +177,58 @@ CAtariAVGBaseGame::interruptCheck(
 
     return error;
 }
+
+//
+// wrappers for POKEY custom tests
+//
+PERROR
+CAtariAVGBaseGame::pokeyIdle(
+                             void *cAtariAVGBaseGame
+                             )
+{
+    CAtariAVGBaseGame *pThis = (CAtariAVGBaseGame *) cAtariAVGBaseGame;
+    PERROR error = errorSuccess;
+    
+    error = pThis->m_pokey->idle();
+    return error;
+}
+
+PERROR
+CAtariAVGBaseGame::pokeySoundTest(
+                                  void *cAtariAVGBaseGame
+                                  )
+{
+    CAtariAVGBaseGame *pThis = (CAtariAVGBaseGame *) cAtariAVGBaseGame;
+    PERROR error = errorSuccess;
+    
+    // TO-DO: add sound enable address to game classes instead of hard-coding it here
+    error = pThis->m_cpu->memoryWrite(0x1840, 0x20); // enable sound output (turns on 4066 analog switch)
+    error = pThis->m_pokey->soundCheck();
+    error = pThis->m_cpu->memoryWrite(0x1840, 0x00); // disable sound output
+    return error;
+}
+
+PERROR
+CAtariAVGBaseGame::pokeySwitchTest(
+                                   void *cAtariAVGBaseGame
+                                   )
+{
+    CAtariAVGBaseGame *pThis = (CAtariAVGBaseGame *) cAtariAVGBaseGame;
+    PERROR error = errorSuccess;
+    
+    error = pThis->m_pokey->readSwitches();
+    return error;
+}
+
+PERROR
+CAtariAVGBaseGame::pokeyRandomTest(
+                                   void *cAtariAVGBaseGame
+                                   )
+{
+    CAtariAVGBaseGame *pThis = (CAtariAVGBaseGame *) cAtariAVGBaseGame;
+    PERROR error = errorSuccess;
+    
+    error = pThis->m_pokey->readRandom();
+    return error;
+}
+

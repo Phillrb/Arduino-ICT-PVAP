@@ -134,6 +134,8 @@ static const OUTPUT_REGION s_outputRegion[] PROGMEM = { //                      
     {0}
 }; // end of list
 
+static const UINT32 s_pokeyAddress = 0x1820;
+
 IGame*
 CBattlezoneGame::createInstanceSet2(
 )
@@ -168,7 +170,8 @@ CBattlezoneGame::CBattlezoneGame(
    ) : CAtariAVGBaseGame( clockMaster,
                           romRegion,
                           s_inputRegion,
-                          s_outputRegion
+                          s_outputRegion,
+                          s_pokeyAddress
                          )
 {
 }

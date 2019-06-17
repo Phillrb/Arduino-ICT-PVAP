@@ -25,6 +25,7 @@
 #ifndef CAsteroidsDeluxeGame_h
 #define CAsteroidsDeluxeGame_h
 #include "CAsteroidsBaseGame.h"
+#include "CPOKEY.h"
 
 class CAsteroidsDeluxeGame : public CAsteroidsBaseGame
 {
@@ -49,6 +50,30 @@ class CAsteroidsDeluxeGame : public CAsteroidsBaseGame
         static ROM_REGION getAstDlxRomset2();
         static ROM_REGION getAstDlxRomset1();
 
+        //
+        // Custom functions for Asteroids Deluxe only
+        //
+        static PERROR pokeyIdle(
+                                void *cAsteroidsDeluxeGame
+                                );
+    
+        static PERROR pokeySoundTest(
+                                     void *cAsteroidsDeluxeGame
+                                     );
+    
+        static PERROR pokeySwitchTest(
+                                      void *cAsteroidsDeluxeGame
+                                      );
+    
+        static PERROR pokeyRandomTest(
+                                      void *cAsteroidsDeluxeGame
+                                      );
+    
+    protected:
+        ~CAsteroidsDeluxeGame(
+        );
+    
+
     private:
 
         //
@@ -58,6 +83,9 @@ class CAsteroidsDeluxeGame : public CAsteroidsBaseGame
             const bool       clockMaster,
             const ROM_REGION *romRegion
         );
+    
+        CPOKEY *m_pokey;
+        CFastPin *m_pokeyClk;
 };
 
 #endif

@@ -23,6 +23,8 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 #include "CAsteroidsDeluxeGame.h"
+#include "PinMap.h"
+#include "6502PinDescription.h"
 
 static const UINT32 s_ROM_2716_SIZE = 0x0800; //2KB - 2048 bytes - 0x800 in hex
 
@@ -255,12 +257,63 @@ static const OUTPUT_REGION s_outputRegion[] PROGMEM = { //                      
 
 //
 // Custom functions implemented for this game
-// POKEY tests will go here
 //
 static const CUSTOM_FUNCTION s_customFunction[] PROGMEM = {
     //                                         "0123456789"
+    {CAsteroidsDeluxeGame::pokeyIdle,          "PKY Idle  "},
+    {CAsteroidsDeluxeGame::pokeySoundTest,     "PKY Sound "},
+    {CAsteroidsDeluxeGame::pokeySwitchTest,    "PKY Switch"},
+    {CAsteroidsDeluxeGame::pokeyRandomTest,    "PKY Random"},
     {NO_CUSTOM_FUNCTION} // end of list
 };
+
+PERROR
+CAsteroidsDeluxeGame::pokeyIdle(
+                                void *cAsteroidsDeluxeGame
+                                )
+{
+    CAsteroidsDeluxeGame *pThis = (CAsteroidsDeluxeGame *) cAsteroidsDeluxeGame;
+    PERROR error = errorSuccess;
+    
+    error = pThis->m_pokey->idle();
+    return error;
+}
+
+PERROR
+CAsteroidsDeluxeGame::pokeySoundTest(
+                                     void *cAsteroidsDeluxeGame
+                                     )
+{
+    CAsteroidsDeluxeGame *pThis = (CAsteroidsDeluxeGame *) cAsteroidsDeluxeGame;
+    PERROR error = errorSuccess;
+    
+    error = pThis->m_pokey->soundCheck();
+    return error;
+}
+
+PERROR
+CAsteroidsDeluxeGame::pokeySwitchTest(
+                                      void *cAsteroidsDeluxeGame
+                                      )
+{
+    CAsteroidsDeluxeGame *pThis = (CAsteroidsDeluxeGame *) cAsteroidsDeluxeGame;
+    PERROR error = errorSuccess;
+    
+    error = pThis->m_pokey->readSwitches();
+    return error;
+}
+
+PERROR
+CAsteroidsDeluxeGame::pokeyRandomTest(
+                                      void *cAsteroidsDeluxeGame
+                                      )
+{
+    CAsteroidsDeluxeGame *pThis = (CAsteroidsDeluxeGame *) cAsteroidsDeluxeGame;
+    PERROR error = errorSuccess;
+    
+    error = pThis->m_pokey->readRandom();
+    return error;
+}
 
 IGame*
 CAsteroidsDeluxeGame::createInstanceSet3(
@@ -316,4 +369,16 @@ CAsteroidsDeluxeGame::CAsteroidsDeluxeGame(
                                                       s_outputRegion,
                                                       s_customFunction )
 {
+    m_pokeyClk = new CFastPin(g_pinMap40DIL, &s_CLK2o_o);
+    m_pokey = new CPOKEY(m_cpu, 0x02C00, m_pokeyClk);
+}
+
+CAsteroidsDeluxeGame::~CAsteroidsDeluxeGame(
+)
+{
+    delete m_pokey;
+    m_pokey = (CPOKEY *) NULL;
+    
+    delete m_pokeyClk;
+    m_pokeyClk = (CFastPin *) NULL;
 }

@@ -107,11 +107,7 @@ CAtariAVGBaseGame::CAtariAVGBaseGame(
     m_cpu->idle();
 
     // IRQ is not connected on this game
-
-    // NMI is connected to a timer (188 Hz?), which is disabled when game self-test switch is closed
-    // The Interrupt Check function currently returns:
-    //    "Timeout" with self-test switch on
-    //    "Unexpected" with self-test switch off (interrupt fires again faster than the default test in CGame.cpp expects)
+    // NMI is connected to a 250 Hz timer, which is disabled when the game's self-test switch is closed
     m_interrupt = ICpu::NMI;
     m_interruptAutoVector = true;
 }
@@ -122,4 +118,45 @@ CAtariAVGBaseGame::~CAtariAVGBaseGame(
 {
     delete m_cpu;
     m_cpu = (ICpu *) NULL;
+}
+
+//
+// Custom interrupt test
+//
+PERROR
+CAtariAVGBaseGame::interruptCheck(
+)
+{
+    PERROR error = errorSuccess;
+    UINT16 data16 = 0x0000;
+    
+    // Only run test if the self-test switch is OFF
+    error = m_cpu->memoryRead(0x0800, &data16);
+    if (data16 & s_MSK_D4)
+    {
+        // NMI is connected to a 250 Hz timer,
+        // so we just verify that the state is toggling on its own
+        for (int i = 0 ; i < 10 ; i++)
+        {
+            // Wait up to 100ms for interrupt to be active
+            error = m_cpu->waitForInterrupt(m_interrupt, true, 100);
+            if (SUCCESS(error))
+            {
+                // Wait for interrupt to be inactive
+                error = m_cpu->waitForInterrupt(m_interrupt, false, 100);
+            }
+            if (FAILED(error))
+            {
+                break;
+            }
+        }
+    }
+    else
+    {
+        error = errorCustom;
+        error->code = ERROR_SUCCESS;
+        error->description = "N/A w/test sw ON";
+    }
+
+    return error;
 }

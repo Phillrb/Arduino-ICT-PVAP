@@ -51,7 +51,12 @@ class CAtariAVGBaseGame : public CGame
     static const UINT32 s_ACT_Hi = 0x00;
     static const UINT32 s_ACT_Lo = 0x01;
 
-    
+    //
+    // Custom interrupt test (no IRQ; timer on NMI)
+    //
+    virtual PERROR interruptCheck(
+    );
+
     protected:
 
         CAtariAVGBaseGame(

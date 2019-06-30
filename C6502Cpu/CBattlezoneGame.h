@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017, Phillip Riscombe-Burton
+// Copyright (c) 2019, Warren Ondras
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -22,55 +22,41 @@
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef CAsteroidsBaseGame_h
-#define CAsteroidsBaseGame_h
+#ifndef CBattlezoneGame_h
+#define CBattlezoneGame_h
 
-#include "CGame.h"
+#include "CAtariAVGBaseGame.h"
 
-
-class CAsteroidsBaseGame : public CGame
+class CBattlezoneGame : public CAtariAVGBaseGame
 {
     public:
-    
-    //Bit masks - used to test inputs etc by masking / selecting specific bits of data
-    static const UINT32 s_MSK_D0 = 0x01;
-    static const UINT32 s_MSK_D1 = 0x02;
-    static const UINT32 s_MSK_D2 = 0x04;
-    static const UINT32 s_MSK_D3 = 0x08;
-    static const UINT32 s_MSK_D4 = 0x10;
-    static const UINT32 s_MSK_D5 = 0x20;
-    static const UINT32 s_MSK_D6 = 0x40;
-    static const UINT32 s_MSK_D7 = 0x80;
-    
-    static const UINT32 s_MSK_D0_TO_D3 = 0x0F;
-    static const UINT32 s_MSK_D2_TO_D5 = 0x3C;
-    static const UINT32 s_MSK_D6_D7 = 0xC0;
-    
-    static const UINT32 s_MSK_ALL = 0xFF;
-    
-    //Active High
-    static const UINT32 s_ACT_Hi = 0x00;
-    //Active Low
-    static const UINT32 s_ACT_Lo = 0x01;
+
+        // active low/high mask for 74LS273 at M5 (controls sound hardware and start LED)
+        static const UINT32 s_M5_INV_MASK = 0x40; // all pins are active high except bit 6 (start LED)
 
         //
-        // CAsteroidsBaseGame
+        // Constructors for this game.
+        //
+        static IGame* createInstanceSet2();
+        static IGame* createInstanceClockMasterSet2();
+        static IGame* createInstanceSet1();
+        static IGame* createInstanceClockMasterSet1();
+
+        //
+        // IGame Interface - wholly implemented in the Base game.
         //
     
-    protected:
+        static ROM_REGION getBZRomset2();
+        static ROM_REGION getBZRomset1();
 
-        CAsteroidsBaseGame(
-            const bool          clockMaster,
-            const ROM_REGION    *romRegion,
-            const RAM_REGION    *ramRegion,
-            const RAM_REGION    *ramRegionByteOnly,
-            const RAM_REGION    *ramRegionWriteOnly,
-            const INPUT_REGION  *inputRegion,
-            const OUTPUT_REGION *outputRegion,
-            const CUSTOM_FUNCTION *customFunction
-        );
+    private:
 
-        ~CAsteroidsBaseGame(
+        //
+        // Different ROM sets supplied.
+        //
+        CBattlezoneGame(
+            const bool       clockMaster,
+            const ROM_REGION *romRegion
         );
 
 };

@@ -7,10 +7,11 @@ https://github.com/prswan/arduino-mega-ict
 Currently adding support for:
 - Asteroids
 - Asteroids Deluxe
+- Battlezone - by @wondras
 - Lunar Lander
 - Pacland
-- PunchOut-!!
-- Super PunchOut-!!
+- Punch-Out!!
+- Super Punch-Out!!
 - Arm Wrestling
 
 Simply pull down the Paul Swan repo at https://github.com/prswan/arduino-mega-ict and then add or overwrite some of the files with those supplied in this repo.

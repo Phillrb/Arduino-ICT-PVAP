@@ -13,6 +13,9 @@ Currently adding support for:
 - Punch-Out!!
 - Super Punch-Out!!
 - Arm Wrestling
+- Space Invaders (Midway) B&W
+- Super Invaders B&W
+- Super Invaders Ruffler & Deith (B&W)
 
 Simply pull down the Paul Swan repo at https://github.com/prswan/arduino-mega-ict and then add or overwrite some of the files with those supplied in this repo.
 

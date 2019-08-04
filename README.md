@@ -8,6 +8,7 @@ Currently adding support for:
 - Asteroids
 - Asteroids Deluxe
 - Battlezone - by @wondras
+- Centipede - by @wondras
 - Lunar Lander
 - Pacland
 - Punch-Out!!

@@ -38,7 +38,12 @@ CCentipedeBaseGame::CCentipedeBaseGame(
                    const INPUT_REGION  *inputRegion,
                    const OUTPUT_REGION *outputRegion,
                    const CUSTOM_FUNCTION *customFunction,
-                   const UINT32        irqResetAddress
+                   const UINT32        irqResetAddress,
+                   const UINT32        earomWriteBaseAddress,
+                   const UINT32        earomControlAddress,
+                   const UINT32        earomReadAddress,
+                   const UINT32        earomUserConfirmationAddress,
+                   const UINT32        earomUserConfirmationMask
 )  : CGame( romRegion,
             ramRegion,
             ramRegionByteOnly,
@@ -59,11 +64,14 @@ CCentipedeBaseGame::CCentipedeBaseGame(
     
     m_cpu->idle();
     
-    // NMI not used
     // IRQ
     m_interrupt = ICpu::IRQ0;
     m_interruptAutoVector = true;
     m_irqResetAddress = irqResetAddress;
+    
+    m_earom = new CER2055(m_cpu, earomWriteBaseAddress, earomControlAddress, earomReadAddress);
+    m_earomUserConfirmationAddress = earomUserConfirmationAddress;
+    m_earomUserConfirmationMask = earomUserConfirmationMask;
 }
 
 CCentipedeBaseGame::~CCentipedeBaseGame(
@@ -71,6 +79,9 @@ CCentipedeBaseGame::~CCentipedeBaseGame(
 {
     delete m_cpu;
     m_cpu = (ICpu *) NULL;
+
+    delete m_earom;
+    m_earom = (CER2055 *) NULL;
 }
 
 //
@@ -107,6 +118,108 @@ CCentipedeBaseGame::interruptCheck(
         {
             break;
         }
+    }
+    return error;
+}
+
+//
+// Helper function to confirm destructive operations
+// requires P1START switch defined by m_earomUserConfirmationAddress and m_earomUserConfirmationMask to be active (low)
+//
+PERROR
+CCentipedeBaseGame::confirmDestructiveOperation(
+)
+{
+    PERROR error = errorSuccess;
+    UINT16 data16 = 0;
+    
+    error = this->m_cpu->memoryRead(m_earomUserConfirmationAddress, &data16);
+    if (FAILED(error) || ((UINT8)data16 & m_earomUserConfirmationMask))
+    {
+        error = errorCustom;
+        error->code = ERROR_FAILED;
+        error->description = "E:Hold P1START";
+    }
+    return error;
+}
+
+//
+// Returns EAROM to dormant state (shouldn't really be needed)
+//
+PERROR
+CCentipedeBaseGame::earomIdle(
+                              void *cCentipedeBaseGame
+                              )
+{
+    CCentipedeBaseGame *pThis = (CCentipedeBaseGame *) cCentipedeBaseGame;
+    PERROR error = errorSuccess;
+    error = pThis->m_earom->idle();
+    return error;
+}
+
+//
+// Basic EAROM read test
+//
+PERROR
+CCentipedeBaseGame::earomReadTest(
+                                  void *cCentipedeBaseGame
+                                  )
+{
+    CCentipedeBaseGame *pThis = (CCentipedeBaseGame *) cCentipedeBaseGame;
+    PERROR error = errorSuccess;
+    error = pThis->m_earom->readTest();
+    return error;
+}
+
+//
+// Erase all contents of EAROM
+// WARNING: Clears all high scores, and uses up 64 of the EAROM's 1 million rated write cycles
+//
+PERROR
+CCentipedeBaseGame::earomErase(
+                               void *cCentipedeBaseGame
+                               )
+{
+    CCentipedeBaseGame *pThis = (CCentipedeBaseGame *) cCentipedeBaseGame;
+    PERROR error = errorSuccess;
+    
+    error = pThis->confirmDestructiveOperation(); // only proceed if player 1 start button is pressed
+    if (SUCCESS(error))
+    {
+        error = pThis->m_earom->erase();
+    }
+    return error;
+}
+
+//
+// Dump contents of EAROM to serial port as hex bytes
+//
+PERROR
+CCentipedeBaseGame::earomSerialDump(
+                                    void *cCentipedeBaseGame
+                                    )
+{
+    CCentipedeBaseGame *pThis = (CCentipedeBaseGame *) cCentipedeBaseGame;
+    PERROR error = errorSuccess;
+    error = pThis->m_earom->serialDump();
+    return error;
+}
+
+//
+// Rewrite EAROM from hex bytes on serial port
+//
+PERROR
+CCentipedeBaseGame::earomSerialLoad(
+                                void *cCentipedeBaseGame
+                                )
+{
+    CCentipedeBaseGame *pThis = (CCentipedeBaseGame *) cCentipedeBaseGame;
+    PERROR error = errorSuccess;
+    
+    error = pThis->confirmDestructiveOperation(); // only proceed if player 1 start button is pressed
+    if (SUCCESS(error))
+    {
+        error = pThis->m_earom->serialLoad();
     }
     return error;
 }

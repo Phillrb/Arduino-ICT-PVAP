@@ -82,6 +82,11 @@ static const UINT32 s_ROM_ADDR_J1  = 0x3800;
 // hardware addresses
 //
 static const UINT32 s_IRQ_RESET_ADDR = 0x1800;
+static const UINT32 s_EAROM_WRITE_ADDR = 0x1600;
+static const UINT32 s_EAROM_CONTROL_ADDR = 0x1680;
+static const UINT32 s_EAROM_READ_ADDR = 0x1700;
+static const UINT32 s_EAROM_USER_CONFIRMATION_ADDRESS = 0x0c01;  // address for P1START to confirm destructive EAROM operations
+static const UINT32 s_EAROM_USER_CONFIRMATION_MASK = CCentipedeBaseGame::s_MSK_D0; // bitmask for P1START
 
 //
 // ROM regions
@@ -126,7 +131,7 @@ static const RAM_REGION s_ramRegion[] PROGMEM = {
     {NO_BANK_SWITCH, 0x0000,      0x03FF,      1, 0x0F, "H2 ", "PrgLwr"}, // Program RAM H2, 2114 (1024 x 4), lower
     {NO_BANK_SWITCH, 0x0000,      0x03FF,      1, 0xF0, "F2 ", "PrgUpr"}, // Program RAM F2, 2114 (1024 x 4), upper
     /*
-    // reads from video RAM at 0x0400-0x07ff must be synchronous with phi0 clock; not currently supported (without clock master mode)
+    // reads/writes of video RAM at 0x0400-0x07ff must be synchronous with phi0 clock; not currently supported
     {NO_BANK_SWITCH, 0x0400,      0x04FF,      1, 0x0F, "K7 ", "Video "}, // Video RAM, 2101 256x4 - lower
     {NO_BANK_SWITCH, 0x0500,      0x05FF,      1, 0x0F, "L7 ", "Video "}, // Video RAM, 2101 256x4 - lower
     {NO_BANK_SWITCH, 0x0600,      0x06FF,      1, 0x0F, "M7 ", "Video "}, // Video RAM, 2101 256x4 - lower
@@ -134,9 +139,8 @@ static const RAM_REGION s_ramRegion[] PROGMEM = {
     {NO_BANK_SWITCH, 0x0400,      0x04FF,      1, 0xF0, "K5 ", "Video "}, // Video RAM, 2101 256x4 - upper
     {NO_BANK_SWITCH, 0x0500,      0x05FF,      1, 0xF0, "L5 ", "Video "}, // Video RAM, 2101 256x4 - upper
     {NO_BANK_SWITCH, 0x0600,      0x06FF,      1, 0xF0, "M5 ", "Video "}, // Video RAM, 2101 256x4 - upper
-    {NO_BANK_SWITCH, 0x0700,      0x08FF,      1, 0xF0, "N5 ", "Video "}, // Video RAM, 2101 256x4 - upper
-     */
-    
+    {NO_BANK_SWITCH, 0x0700,      0x07FF,      1, 0xF0, "N5 ", "Video "}, // Video RAM, 2101 256x4 - upper
+    */
     {0} // end of list
 };
 
@@ -146,14 +150,13 @@ static const RAM_REGION s_ramRegion[] PROGMEM = {
 static const RAM_REGION s_ramRegionByteOnly[] PROGMEM = {
                                                   //    "012", "012345"
     {NO_BANK_SWITCH, 0x0000,      0x03FF,      1, 0xFF, "2HF", "Progrm"}, // Program RAM H2/F2
-
-    // reads from video RAM at 0x0400-0x07ff must be synchronous with phi0 clock; not currently supported
     /*
+    // reads/writes of video RAM at 0x0400-0x07ff must be synchronous with phi0 clock; not currently supported
     {NO_BANK_SWITCH, 0x0400,      0x04FF,      1, 0xFF, "K75", "Video "}, // Video RAM K7/K5
     {NO_BANK_SWITCH, 0x0500,      0x05FF,      1, 0xFF, "L75", "Video "}, // Video RAM L7/L5
     {NO_BANK_SWITCH, 0x0600,      0x06FF,      1, 0xFF, "M75", "Video "}, // Video RAM M7/M5
     {NO_BANK_SWITCH, 0x0700,      0x07FF,      1, 0xFF, "N75", "Video "}, // Video RAM N7/N5
-     */
+    */
     {0} // end of list
 };
 
@@ -192,7 +195,6 @@ static const INPUT_REGION s_inputRegion[] PROGMEM = {
     {NO_BANK_SWITCH, 0x0c00,  CCentipedeBaseGame::s_MSK_D6,   "K9 ", "VBlank"}, // Vertical blank, K9 pin 5, bit 6
     {NO_BANK_SWITCH, 0x0c00,  CCentipedeBaseGame::s_MSK_D5,   "K9 ", "SlfTst"}, // Self-test switch, K9 pin 14, bit 5
     {NO_BANK_SWITCH, 0x0c00,  CCentipedeBaseGame::s_MSK_D4,   "K9 ", "CkTail"}, // Cocktail cabinet harness, K9 pin 2, bit 4
-    
     {0} // end of list
 };
 
@@ -212,7 +214,6 @@ static const OUTPUT_REGION s_outputRegion[] PROGMEM = { //                      
     {NO_BANK_SWITCH, 0x1800, CCentipedeBaseGame::s_MSK_ALL, CCentipedeBaseGame::s_ACT_Lo,  "F3 ", "IRQAck"}, // F3 pin 11, IRQ Acknowledge
     {NO_BANK_SWITCH, 0x2000, CCentipedeBaseGame::s_MSK_ALL, CCentipedeBaseGame::s_ACT_Lo,  "F3 ", "WD Rst"}, // F3 pin 3,  Clear watchdog timer
     {NO_BANK_SWITCH, 0x2400, CCentipedeBaseGame::s_MSK_ALL, CCentipedeBaseGame::s_ACT_Lo,  "F3 ", "TrkClr"}, // F3 pin 6,  Clear trakball counters
-
     {0} // end of list
 };
 
@@ -221,15 +222,15 @@ static const OUTPUT_REGION s_outputRegion[] PROGMEM = { //                      
 //
 static const CUSTOM_FUNCTION s_customFunction[] PROGMEM = {
     // TO-DO:
-    //    graphics RAM 0x0400-0x07ff r/w tests (synced with phi0)
-    //    visual display tests
-    //        playfield            0x0400-0x07bf
-    //        motion objects       0x07c0-0x07ff
-    //        color RAM            0x1400-0x140f (or divide into playfield color 0x1400-140b, motion obj color 0x140c-140f)
+    //    graphics RAM and visual tests
     //    POKEY 0x1000-0x100f
-    //    EAROM (address/data latch 0x1600, control latch 0x1680, read data 0x1700)
     //    trackball test?
-    //                          "0123456789"
+    //                                "0123456789"
+//    {CCentipedeBaseGame::earomIdle,       "EAROM Idle"},
+    {CCentipedeBaseGame::earomReadTest,   "EAROM Read"},
+    {CCentipedeBaseGame::earomSerialDump, "EAROM Dump"},
+    {CCentipedeBaseGame::earomSerialLoad, "EAROM Load"},
+    {CCentipedeBaseGame::earomErase,      "EAROM Wipe"},
     {NO_CUSTOM_FUNCTION} // end of list
 };
 
@@ -300,7 +301,12 @@ CCentipedeGame::CCentipedeGame(
                                        s_inputRegion,
                                        s_outputRegion,
                                        s_customFunction,
-                                       s_IRQ_RESET_ADDR
+                                       s_IRQ_RESET_ADDR,
+                                       s_EAROM_WRITE_ADDR,
+                                       s_EAROM_CONTROL_ADDR,
+                                       s_EAROM_READ_ADDR,
+                                       s_EAROM_USER_CONFIRMATION_ADDRESS,
+                                       s_EAROM_USER_CONFIRMATION_MASK
                                       )
 {
 }

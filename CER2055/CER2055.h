@@ -22,42 +22,60 @@
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+#ifndef CER2055_h
+#define CER2055_h
 
-#ifndef CCentipedeGame_h
-#define CCentipedeGame_h
+#include "ICpu.h"
+//#include "CFastPin.h"
 
-#include "CCentipedeBaseGame.h"
 
-class CCentipedeGame : public CCentipedeBaseGame
+class CER2055
 {
-public:
-    
-    //
-    // Constructors for this game.
-    //
-    static IGame* createInstanceSet4();
-    static IGame* createInstanceClockMasterSet4();
-    static IGame* createInstanceSet3();
-    static IGame* createInstanceClockMasterSet3();
-    static IGame* createInstanceSet2();
-    static IGame* createInstanceClockMasterSet2();
-    static IGame* createInstanceSet1();
-    static IGame* createInstanceClockMasterSet1();
+    public:
 
-    static PERROR videoTest(
-                            void *cCentipedeGame
-                            );
+        CER2055(
+                      ICpu   *cpu,
+                      UINT16 writeBaseAddress,
+                      UINT16 controlAddress,
+                      UINT16 readAddress
+        );
 
-private:
-    
-    //
-    // Different ROM sets supplied.
-    //
-    CCentipedeGame(
-                    const bool       clockMaster,
-                    const ROM_REGION *romRegion
+        ~CER2055(
+        );
+
+        PERROR idle(
+        );
+
+        PERROR read(
+                    UINT8 offset,
+                    UINT8 *data
                     );
+    
+        PERROR write(
+                     UINT8 offset,
+                     UINT8 data
+        );
 
+        PERROR readTest(
+        );
+
+        PERROR erase(
+        );
+ 
+        PERROR serialDump(
+        );
+ 
+        PERROR serialLoad(
+        );
+
+    
+    private:
+
+        ICpu    *m_cpu;
+        UINT16  m_writeBaseAddress;
+        UINT16  m_controlAddress;
+        UINT16  m_readAddress;
 };
 
 #endif
+

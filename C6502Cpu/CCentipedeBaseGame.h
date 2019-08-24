@@ -27,6 +27,7 @@
 #define CCentipedeBaseGame_h
 
 #include "CGame.h"
+#include "CER2055.h"
 
 class CCentipedeBaseGame : public CGame
 {
@@ -51,11 +52,28 @@ public:
     static const UINT32 s_ACT_Hi = 0x00;
     static const UINT32 s_ACT_Lo = 0x01;
 
-    //
-    // Custom interrupt test (no NMI; vertical counter 32V on IRQ)
-    //
     virtual PERROR interruptCheck(
     );
+    
+    static PERROR earomIdle(
+                            void *cCentipedeGame
+                            );
+    
+    static PERROR earomReadTest(
+                                void *cCentipedeGame
+                                );
+    
+    static PERROR earomErase(
+                             void *cCentipedeGame
+                             );
+    
+    static PERROR earomSerialDump(
+                                  void *cCentipedeGame
+                                  );
+    
+    static PERROR earomSerialLoad(
+                                  void *cCentipedeGame
+                                  );
 
 protected:
     
@@ -68,14 +86,26 @@ protected:
                        const INPUT_REGION  *inputRegion,
                        const OUTPUT_REGION *outputRegion,
                        const CUSTOM_FUNCTION *customFunction,
-                       const UINT32        IrqResetAddress
+                       const UINT32        IrqResetAddress,
+                       const UINT32        earomWriteBaseAddress,
+                       const UINT32        earomControlAddress,
+                       const UINT32        earomReadAddress,
+                       const UINT32        earomUserConfirmationAddress,
+                       const UINT32        earomUserConfirmationMask
                        );
     
     ~CCentipedeBaseGame(
     );
 
 private:
+
+    PERROR confirmDestructiveOperation(
+    );
+
     UINT32 m_irqResetAddress;
+    CER2055 *m_earom;
+    UINT32 m_earomUserConfirmationAddress;
+    UINT32 m_earomUserConfirmationMask;
     
 };
 

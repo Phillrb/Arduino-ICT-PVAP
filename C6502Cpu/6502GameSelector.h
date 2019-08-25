@@ -27,7 +27,6 @@
 #include <CAsteroidsGame.h>
 #include <CAsteroidsDeluxeGame.h>
 #include <CBattlezoneGame.h>
-#include <CCentipedeGame.h>
 #include <CLunarLanderGame.h>
 
 //
@@ -54,14 +53,6 @@ static const SELECTOR s_gameSelector[] PROGMEM = {//0123456789abcde
     {"BZone (2) clk  ",  onSelectGame,    (void*) (CBattlezoneGame::createInstanceClockMasterSet2),  false},
     {"BZone (1)      ",  onSelectGame,    (void*) (CBattlezoneGame::createInstanceSet1),             false},
     {"BZone (1) clk  ",  onSelectGame,    (void*) (CBattlezoneGame::createInstanceClockMasterSet1),  false},
-    {"Centipede 1    ",  onSelectGame,    (void*) (CCentipedeGame::createInstanceSet1),              false},
-    {"Centipede 1 clk",  onSelectGame,    (void*) (CCentipedeGame::createInstanceClockMasterSet2),   false},
-    {"Centipede 2    ",  onSelectGame,    (void*) (CCentipedeGame::createInstanceSet2),              false},
-    {"Centipede 2 clk",  onSelectGame,    (void*) (CCentipedeGame::createInstanceClockMasterSet3),   false},
-    {"Centipede 3    ",  onSelectGame,    (void*) (CCentipedeGame::createInstanceSet3),              false},
-    {"Centipede 3 clk",  onSelectGame,    (void*) (CCentipedeGame::createInstanceClockMasterSet4),   false},
-    {"Centipede 4    ",  onSelectGame,    (void*) (CCentipedeGame::createInstanceSet4),              false},
-    {"Centipede 4 clk",  onSelectGame,    (void*) (CCentipedeGame::createInstanceClockMasterSet1),   false},
     {"LLander (2)    ",  onSelectGame,    (void*) (CLunarLanderGame::createInstanceSet2),            false},
     {"LLander (2) clk",  onSelectGame,    (void*) (CLunarLanderGame::createInstanceClockMasterSet2), false},
     {"LLander (1)    ",  onSelectGame,    (void*) (CLunarLanderGame::createInstanceSet1),            false},

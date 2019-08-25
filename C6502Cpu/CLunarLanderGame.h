@@ -44,9 +44,6 @@ class CLunarLanderGame : public CLunarLanderBaseGame
         // IGame Interface - wholly implemented in the Base game.
         //
     
-    static ROM_REGION getLLanderRomset2();
-    static ROM_REGION getLLanderRomset1();
-
     private:
 
         //

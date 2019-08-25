@@ -84,13 +84,6 @@ static const ROM_REGION s_romRegionSet1[] PROGMEM = { //
     {NO_BANK_SWITCH, s_ROM_ADDR_B1,  s_ROM_2716_SIZE, s_romData_1_B1,  0xB11A7D01, "B1 "}, //B1 -  v1
     {0} }; // end of list
 
-ROM_REGION CLunarLanderGame::getLLanderRomset2(){
-    return *s_romRegionSet2;
-}
-ROM_REGION CLunarLanderGame::getLLanderRomset1(){
-    return *s_romRegionSet1;
-}
-
 //INPUT
 //2000 D0 HALT
 //2000 D1 TEST SW

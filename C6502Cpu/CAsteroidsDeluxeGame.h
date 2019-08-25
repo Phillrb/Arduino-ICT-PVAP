@@ -44,11 +44,7 @@ class CAsteroidsDeluxeGame : public CAsteroidsBaseGame
         //
         // IGame Interface - wholly implemented in the Base game.
         //
-    
-        static ROM_REGION getAstDlxRomset3();
-        static ROM_REGION getAstDlxRomset2();
-        static ROM_REGION getAstDlxRomset1();
-
+     
     private:
 
         //

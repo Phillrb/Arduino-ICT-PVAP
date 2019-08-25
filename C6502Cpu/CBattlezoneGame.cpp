@@ -78,9 +78,6 @@ static const ROM_REGION s_romRegionSet1[] PROGMEM = {
     {NO_BANK_SWITCH, s_ROM_ADDR_BC3, s_ROM_2716_SIZE, s_romData_1_BC3, 0x7414177b, "BC3"},
     {0} }; // end of list
 
-ROM_REGION CBattlezoneGame::getBZRomset2(){ return *s_romRegionSet2; }
-ROM_REGION CBattlezoneGame::getBZRomset1(){ return *s_romRegionSet1; }
-
 //
 // Input region is the same for all ROM versions.
 //

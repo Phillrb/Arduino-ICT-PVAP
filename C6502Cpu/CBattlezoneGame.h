@@ -45,9 +45,6 @@ class CBattlezoneGame : public CAtariAVGBaseGame
         //
         // IGame Interface - wholly implemented in the Base game.
         //
-    
-        static ROM_REGION getBZRomset2();
-        static ROM_REGION getBZRomset1();
 
     private:
 

@@ -102,10 +102,6 @@ static const ROM_REGION s_romRegionSet1[] PROGMEM = { //
     {NO_BANK_SWITCH, s_ROM_ADDR_J1,  s_ROM_2716_SIZE, s_romData_1_J1,  0xef09bac7, "J1 "}, //J1  -  v1
     {0} }; // end of list
 
-ROM_REGION CAsteroidsDeluxeGame::getAstDlxRomset3(){ return *s_romRegionSet3; }
-ROM_REGION CAsteroidsDeluxeGame::getAstDlxRomset2(){ return *s_romRegionSet2; }
-ROM_REGION CAsteroidsDeluxeGame::getAstDlxRomset1(){ return *s_romRegionSet1; }
-
 //
 // RAM regions for Asteroids Deluxe are the same as Asteroids, but chip locations are different
 //

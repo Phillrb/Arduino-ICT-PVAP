@@ -29,6 +29,7 @@
 #include <CBattlezoneGame.h>
 #include <CCentipedeGame.h>
 #include <CLunarLanderGame.h>
+#include <CMillipedeGame.h>
 
 //
 // The initial selector to select the game to test.
@@ -66,6 +67,8 @@ static const SELECTOR s_gameSelector[] PROGMEM = {//0123456789abcde
     {"LLander (2) clk",  onSelectGame,    (void*) (CLunarLanderGame::createInstanceClockMasterSet2), false},
     {"LLander (1)    ",  onSelectGame,    (void*) (CLunarLanderGame::createInstanceSet1),            false},
     {"LLander (1) clk",  onSelectGame,    (void*) (CLunarLanderGame::createInstanceClockMasterSet1), false},
+    {"Millipede      ",  onSelectGame,    (void*) (CMillipedeGame::createInstanceSet1),              false},
+    {"Millipede clk  ",  onSelectGame,    (void*) (CMillipedeGame::createInstanceClockMasterSet1),   false},
     { 0, 0 }
 };
 

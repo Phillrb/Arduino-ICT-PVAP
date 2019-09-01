@@ -85,8 +85,8 @@ static const UINT32 s_IRQ_RESET_ADDR = 0x1800;
 static const UINT32 s_EAROM_WRITE_ADDR = 0x1600;
 static const UINT32 s_EAROM_CONTROL_ADDR = 0x1680;
 static const UINT32 s_EAROM_READ_ADDR = 0x1700;
-static const UINT32 s_EAROM_USER_CONFIRMATION_ADDRESS = 0x0c01;  // address for P1START to confirm destructive EAROM operations
-static const UINT32 s_EAROM_USER_CONFIRMATION_MASK = CCentipedeBaseGame::s_MSK_D0; // bitmask for P1START
+static const UINT32 s_P1START_ADDRESS = 0x0c01;  // address for P1START to confirm destructive EAROM operations
+static const UINT32 s_P1START_MASK = CCentipedeBaseGame::s_MSK_D0; // bitmask for P1START
 
 //
 // ROM regions
@@ -221,11 +221,7 @@ static const OUTPUT_REGION s_outputRegion[] PROGMEM = { //                      
 // Custom functions
 //
 static const CUSTOM_FUNCTION s_customFunction[] PROGMEM = {
-    // TO-DO:
-    //    graphics RAM and visual tests
-    //    POKEY 0x1000-0x100f
-    //    trackball test?
-    //                                "0123456789"
+    //                                    "0123456789"
 //    {CCentipedeBaseGame::earomIdle,       "EAROM Idle"},
     {CCentipedeBaseGame::earomReadTest,   "EAROM Read"},
     {CCentipedeBaseGame::earomSerialDump, "EAROM Dump"},
@@ -233,6 +229,7 @@ static const CUSTOM_FUNCTION s_customFunction[] PROGMEM = {
     {CCentipedeBaseGame::earomErase,      "EAROM Wipe"},
     {NO_CUSTOM_FUNCTION} // end of list
 };
+
 
 IGame*
 CCentipedeGame::createInstanceSet1(
@@ -305,8 +302,8 @@ CCentipedeGame::CCentipedeGame(
                                        s_EAROM_WRITE_ADDR,
                                        s_EAROM_CONTROL_ADDR,
                                        s_EAROM_READ_ADDR,
-                                       s_EAROM_USER_CONFIRMATION_ADDRESS,
-                                       s_EAROM_USER_CONFIRMATION_MASK
+                                       s_P1START_ADDRESS,
+                                       s_P1START_MASK
                                       )
 {
 }

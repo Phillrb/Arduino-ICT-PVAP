@@ -25,6 +25,7 @@
 #ifndef CAsteroidsDeluxeGame_h
 #define CAsteroidsDeluxeGame_h
 #include "CAsteroidsBaseGame.h"
+#include "CER2055.h"
 
 class CAsteroidsDeluxeGame : public CAsteroidsBaseGame
 {
@@ -42,9 +43,18 @@ class CAsteroidsDeluxeGame : public CAsteroidsBaseGame
         static IGame* createInstanceClockMasterSet1();
 
         //
+        // custom tests for the EAROM
+        //
+        static PERROR earomReadTest(void *cCentipedeGame);
+        static PERROR earomErase(void *cCentipedeGame);
+        static PERROR earomSerialDump(void *cCentipedeGame);
+        static PERROR earomSerialLoad(void *cCentipedeGame);
+        PERROR confirmDestructiveOperation();
+    
+        //
         // IGame Interface - wholly implemented in the Base game.
         //
-     
+
     private:
 
         //
@@ -54,6 +64,14 @@ class CAsteroidsDeluxeGame : public CAsteroidsBaseGame
             const bool       clockMaster,
             const ROM_REGION *romRegion
         );
+ 
+        ~CAsteroidsDeluxeGame(
+        );
+
+        PERROR confirmWithP1Start(
+        );
+
+        CER2055 *m_earom;
 };
 
 #endif

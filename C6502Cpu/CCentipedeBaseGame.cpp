@@ -26,7 +26,6 @@
 #include "CCentipedeBaseGame.h"
 #include "C6502Cpu.h"
 #include "C6502ClockMasterCpu.h"
-#include <DFR_Key.h>
 #include "CRomCheck.h"
 
 CCentipedeBaseGame::CCentipedeBaseGame(
@@ -42,8 +41,8 @@ CCentipedeBaseGame::CCentipedeBaseGame(
                    const UINT32        earomWriteBaseAddress,
                    const UINT32        earomControlAddress,
                    const UINT32        earomReadAddress,
-                   const UINT32        earomUserConfirmationAddress,
-                   const UINT32        earomUserConfirmationMask
+                   const UINT32        p1StartAddress,
+                   const UINT32        p1StartMask
 )  : CGame( romRegion,
             ramRegion,
             ramRegionByteOnly,
@@ -69,9 +68,9 @@ CCentipedeBaseGame::CCentipedeBaseGame(
     m_interruptAutoVector = true;
     m_irqResetAddress = irqResetAddress;
     
-    m_earom = new CER2055(m_cpu, earomWriteBaseAddress, earomControlAddress, earomReadAddress);
-    m_earomUserConfirmationAddress = earomUserConfirmationAddress;
-    m_earomUserConfirmationMask = earomUserConfirmationMask;
+    m_earom = new CER2055(m_cpu, earomWriteBaseAddress, earomControlAddress, earomReadAddress, EAROM_C1D1_C2D2);
+    m_p1StartAddress = p1StartAddress;
+    m_p1StartMask = p1StartMask;
 }
 
 CCentipedeBaseGame::~CCentipedeBaseGame(
@@ -123,27 +122,6 @@ CCentipedeBaseGame::interruptCheck(
 }
 
 //
-// Helper function to confirm destructive operations
-// requires P1START switch defined by m_earomUserConfirmationAddress and m_earomUserConfirmationMask to be active (low)
-//
-PERROR
-CCentipedeBaseGame::confirmDestructiveOperation(
-)
-{
-    PERROR error = errorSuccess;
-    UINT16 data16 = 0;
-    
-    error = this->m_cpu->memoryRead(m_earomUserConfirmationAddress, &data16);
-    if (FAILED(error) || ((UINT8)data16 & m_earomUserConfirmationMask))
-    {
-        error = errorCustom;
-        error->code = ERROR_FAILED;
-        error->description = "E:Hold P1START";
-    }
-    return error;
-}
-
-//
 // Returns EAROM to dormant state (shouldn't really be needed)
 //
 PERROR
@@ -183,7 +161,7 @@ CCentipedeBaseGame::earomErase(
     CCentipedeBaseGame *pThis = (CCentipedeBaseGame *) cCentipedeBaseGame;
     PERROR error = errorSuccess;
     
-    error = pThis->confirmDestructiveOperation(); // only proceed if player 1 start button is pressed
+    error = pThis->confirmWithP1Start(); // only proceed if player 1 start button is pressed
     if (SUCCESS(error))
     {
         error = pThis->m_earom->erase();
@@ -216,10 +194,29 @@ CCentipedeBaseGame::earomSerialLoad(
     CCentipedeBaseGame *pThis = (CCentipedeBaseGame *) cCentipedeBaseGame;
     PERROR error = errorSuccess;
     
-    error = pThis->confirmDestructiveOperation(); // only proceed if player 1 start button is pressed
+    error = pThis->confirmWithP1Start(); // only proceed if player 1 start button is pressed
     if (SUCCESS(error))
     {
         error = pThis->m_earom->serialLoad();
+    }
+    return error;
+}
+
+//
+// Require the user to hold down P1 Start when initiating a destructive EAROM operation
+//
+PERROR
+CCentipedeBaseGame::confirmWithP1Start()
+{
+    PERROR error = errorSuccess;
+    UINT16 data16 = 0;
+    
+    error = this->m_cpu->memoryRead(m_p1StartAddress, &data16);
+    if ( FAILED(error) || (data16 & (UINT16)m_p1StartMask)) // active low
+    {
+        error = errorCustom;
+        error->code = ERROR_FAILED;
+        error->description = "E:Hold P1START";
     }
     return error;
 }

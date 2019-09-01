@@ -139,26 +139,14 @@ static const RAM_REGION s_ramRegionByteOnly[] PROGMEM = { //                    
 //
 static const RAM_REGION s_ramRegionWriteOnly[] PROGMEM = { {0} }; // end of list
 
-
-//INPUT
-//2001 D7 3KHz - R
-//2002 D7 HALT - R
-//2003 D7 Hyperspace SW - R
-//2004 D7 Fire - R
-//2005 D7 Diag step - R
-//2006 D7 Slam sw - R
-//2007 D7 Self test sw - R
-
-//2400 D7 Left coin SW - R
-//2401 D7 Center coin SW - R
-//2402 D7 Right coin SW - R
-//2403 D7 1 Player start - R
-//2404 D7 2 Player start - R
-//2405 D7 Thrust - R
-//2406 D7 ROT right - R
-//2407 D7 ROT left - R
-
-//2800 - 2803 D0,D1 - R OPT switches SW1 -> SW8 - R
+//
+// hardware addresses
+//
+static const UINT32 s_EAROM_WRITE_ADDR = 0x3200;
+static const UINT32 s_EAROM_CONTROL_ADDR = 0x3a00;
+static const UINT32 s_EAROM_READ_ADDR = 0x2c40;
+static const UINT32 s_P1START_ADDRESS = 0x2403;  // address for P1START to confirm destructive EAROM operations
+static const UINT32 s_P1START_MASK = CAsteroidsBaseGame::s_MSK_D7; // bitmask for P1START
 
 //
 // Input region is the same for all ROM versions.
@@ -166,7 +154,6 @@ static const RAM_REGION s_ramRegionWriteOnly[] PROGMEM = { {0} }; // end of list
 static const INPUT_REGION s_inputRegion[] PROGMEM = { //     "012", "012345"
     // 0x2000 A0-A3 POKEY
     // 0x2c40 A0-A5 EAROM READ
-
 
     // CLOCK/CONTROL INPUTS
     {NO_BANK_SWITCH, 0x2001,  CAsteroidsBaseGame::s_MSK_D7,  "L10", "3KHZ  "}, // L10 - pin 3
@@ -205,8 +192,6 @@ static const INPUT_REGION s_inputRegion[] PROGMEM = { //     "012", "012345"
     {0}
 }; // end of list
 
-
-//OUTPUT
 
 //
 // Output region is the same for all ROM versions.
@@ -251,12 +236,101 @@ static const OUTPUT_REGION s_outputRegion[] PROGMEM = { //                      
 
 //
 // Custom functions implemented for this game
-// POKEY tests will go here
 //
 static const CUSTOM_FUNCTION s_customFunction[] PROGMEM = {
-    //                                         "0123456789"
+    //                                      "0123456789"
+    {CAsteroidsDeluxeGame::earomReadTest,   "EAROM Read"},
+    {CAsteroidsDeluxeGame::earomSerialDump, "EAROM Dump"},
+    {CAsteroidsDeluxeGame::earomSerialLoad, "EAROM Load"},
+    {CAsteroidsDeluxeGame::earomErase,      "EAROM Wipe"},
     {NO_CUSTOM_FUNCTION} // end of list
 };
+
+//
+// Basic EAROM read test
+//
+PERROR
+CAsteroidsDeluxeGame::earomReadTest(
+                                  void *cAsteroidsDeluxeGame
+                                  )
+{
+    CAsteroidsDeluxeGame *pThis = (CAsteroidsDeluxeGame *) cAsteroidsDeluxeGame;
+    PERROR error = errorSuccess;
+    error = pThis->m_earom->readTest();
+    return error;
+}
+
+//
+// Erase all contents of EAROM
+// WARNING: Clears all high scores, and uses up 64 of the EAROM's 1 million rated write cycles
+//
+PERROR
+CAsteroidsDeluxeGame::earomErase(
+                               void *cAsteroidsDeluxeGame
+                               )
+{
+    CAsteroidsDeluxeGame *pThis = (CAsteroidsDeluxeGame *) cAsteroidsDeluxeGame;
+    PERROR error = errorSuccess;
+    
+    error = pThis->confirmWithP1Start(); // only proceed if player 1 start button is pressed
+    if (SUCCESS(error))
+    {
+        error = pThis->m_earom->erase();
+    }
+    return error;
+}
+
+//
+// Dump contents of EAROM to serial port as hex bytes
+//
+PERROR
+CAsteroidsDeluxeGame::earomSerialDump(
+                                      void *cAsteroidsDeluxeGame
+                                      )
+{
+    CAsteroidsDeluxeGame *pThis = (CAsteroidsDeluxeGame *) cAsteroidsDeluxeGame;
+    PERROR error = errorSuccess;
+    error = pThis->m_earom->serialDump();
+    return error;
+}
+
+//
+// Rewrite EAROM from hex bytes on serial port
+//
+PERROR
+CAsteroidsDeluxeGame::earomSerialLoad(
+                                      void *cAsteroidsDeluxeGame
+                                      )
+{
+    CAsteroidsDeluxeGame *pThis = (CAsteroidsDeluxeGame *) cAsteroidsDeluxeGame;
+    PERROR error = errorSuccess;
+    
+    error = pThis->confirmWithP1Start(); // only proceed if player 1 start button is pressed
+    if SUCCESS(error)
+    {
+        error = pThis->m_earom->serialLoad();
+    }
+    return error;
+}
+
+//
+// Require the user to hold down P1 Start when initiating a destructive EAROM operation
+//
+PERROR
+CAsteroidsDeluxeGame::confirmWithP1Start()
+{
+    PERROR error = errorSuccess;
+    UINT16 data16 = 0;
+    
+    error = this->m_cpu->memoryRead(s_P1START_ADDRESS, &data16);
+    if ( FAILED(error) || !(data16 & (UINT16)s_P1START_MASK) ) // active high
+        {
+            error = errorCustom;
+            error->code = ERROR_FAILED;
+            error->description = "E:Hold P1START";
+        }
+    return error;
+}
 
 IGame*
 CAsteroidsDeluxeGame::createInstanceSet3(
@@ -312,4 +386,12 @@ CAsteroidsDeluxeGame::CAsteroidsDeluxeGame(
                                                       s_outputRegion,
                                                       s_customFunction )
 {
+    m_earom = new CER2055(m_cpu, s_EAROM_WRITE_ADDR, s_EAROM_CONTROL_ADDR, s_EAROM_READ_ADDR, EAROM_C1D2_C2D1);
+}
+
+CAsteroidsDeluxeGame::~CAsteroidsDeluxeGame(
+)
+{
+    delete m_earom;
+    m_earom = (CER2055 *) NULL;
 }

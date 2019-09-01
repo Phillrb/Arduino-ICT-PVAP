@@ -68,12 +68,13 @@
 */
 
 // EACONTROL bit definitions
+#define CTL_IDLE  0x00 // clock low, C1/C2 set for read mode, chip select low
 #define CTL_READ  0x00 // C1 high (inverted), C2 low
-#define CTL_ERASE 0x06 // C1 low  (inverted), C2 high
-#define CTL_WRITE 0x02 // C1 low  (inverted), C2 low
+#define CTL_ERASE 0x06 // C1 low (inverted), C2 high
+#define CTL_WRITE_C1D1_C2D2 0x02 // C1 low (inverted), C2 low
+#define CTL_WRITE_C1D2_C2D1 0x04 // C1 low (inverted), C2 low, with C1/C2 pins swapped
 #define CTL_CLOCK 0x01 // clock high
 #define CTL_CS    0x08 // chip select high
-#define CTL_IDLE  0x00 // clock low, C1/C2 set for read mode, chip select low
 
 #define ER2055_SIZE 0x40 // 64 bytes
 
@@ -81,19 +82,21 @@ CER2055::CER2055(
     ICpu   *cpu,
     UINT16 writeBaseAddress,
     UINT16 controlAddress,
-    UINT16 readAddress
+    UINT16 readAddress,
+    UINT8  C1C2mapping
 ) : m_cpu(cpu),
     m_writeBaseAddress(writeBaseAddress), // EAWRITE
     m_controlAddress(controlAddress),     // EACONTROL
     m_readAddress(readAddress)            // EAREAD
 {
+    // configure write mode to use the control signals that the game hardware expects
+    m_CTL_WRITE = (C1C2mapping == EAROM_C1D2_C2D1) ? CTL_WRITE_C1D2_C2D1 : CTL_WRITE_C1D1_C2D2;
 }
 
 CER2055::~CER2055(
 )
 {
 }
-
 
 //
 // Return to a dormant/idle state.
@@ -106,7 +109,6 @@ CER2055::idle(
     error = m_cpu->memoryWrite(m_controlAddress, CTL_IDLE);  // clock low, read mode, chip select disabled
     return error;
 }
-
 
 //
 // Read a byte from EAROM
@@ -148,7 +150,6 @@ CER2055::read(
     return error;
 }
 
-
 //
 // Write a byte to EAROM
 //
@@ -176,7 +177,7 @@ CER2055::write(
         delay(50); // wait the minimum erase cycle time (50ms)
 
         // switch to write mode
-        error = m_cpu->memoryWrite(m_controlAddress, CTL_WRITE | CTL_CS);
+        error = m_cpu->memoryWrite(m_controlAddress, m_CTL_WRITE | CTL_CS);
         delay(50); // wait the minimum write cycle time (50ms)
     }
     
@@ -185,7 +186,6 @@ CER2055::write(
 
     return error;
 }
-
 
 //
 // Simple read test - loads and displays the first four bytes
@@ -257,7 +257,6 @@ CER2055::erase(
  
     return error;
 }
-
 
 //
 // Dump entire EAROM contents to the serial port
@@ -430,4 +429,3 @@ CER2055::serialLoad(
 
     return error;
 }
-

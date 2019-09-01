@@ -46,6 +46,7 @@ public:
     
     
     static const UINT32 s_MSK_ALL = 0xFF;
+    static const UINT32 s_MSK_D0_TO_D3 = 0x0F;
     static const UINT32 s_MSK_TRAK = 0x8F; // bits 0-3 and 7
     
     //Active High/Low
@@ -90,23 +91,22 @@ protected:
                        const UINT32        earomWriteBaseAddress,
                        const UINT32        earomControlAddress,
                        const UINT32        earomReadAddress,
-                       const UINT32        earomUserConfirmationAddress,
-                       const UINT32        earomUserConfirmationMask
+                       const UINT32        p1StartAddress,
+                       const UINT32        p1StartMask
                        );
     
     ~CCentipedeBaseGame(
     );
 
 private:
-
-    PERROR confirmDestructiveOperation(
-    );
+    
+    PERROR confirmWithP1Start();
 
     UINT32 m_irqResetAddress;
+    UINT32 m_p1StartAddress;
+    UINT32 m_p1StartMask;
     CER2055 *m_earom;
-    UINT32 m_earomUserConfirmationAddress;
-    UINT32 m_earomUserConfirmationMask;
-    
+
 };
 
 #endif

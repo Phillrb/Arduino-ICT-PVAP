@@ -26,8 +26,12 @@
 #define CER2055_h
 
 #include "ICpu.h"
-//#include "CFastPin.h"
 
+// Mapping of the C1/C2 control pins to D1/D2 of the CPU bus is game-dependent
+#define EAROM_C1D1_C2D2 0 // Centipede, Dig Dug, Millipede
+#define EAROM_C1D2_C2D1 1 // Asteroids Deluxe, Black Widow, Gravitar, Liberator, Red Baron Space Duel, Tempest
+
+#define EAROM_P1START_ACTIVE_LOW
 
 class CER2055
 {
@@ -37,7 +41,8 @@ class CER2055
                       ICpu   *cpu,
                       UINT16 writeBaseAddress,
                       UINT16 controlAddress,
-                      UINT16 readAddress
+                      UINT16 readAddress,
+                      UINT8  C1C2mapping
         );
 
         ~CER2055(
@@ -68,13 +73,13 @@ class CER2055
         PERROR serialLoad(
         );
 
-    
-    private:
+     private:
 
         ICpu    *m_cpu;
         UINT16  m_writeBaseAddress;
         UINT16  m_controlAddress;
         UINT16  m_readAddress;
+        UINT8   m_CTL_WRITE;
 };
 
 #endif

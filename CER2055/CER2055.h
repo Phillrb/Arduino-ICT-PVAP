@@ -31,8 +31,6 @@
 #define EAROM_C1D1_C2D2 0 // Centipede, Dig Dug, Millipede
 #define EAROM_C1D2_C2D1 1 // Asteroids Deluxe, Black Widow, Gravitar, Liberator, Red Baron Space Duel, Tempest
 
-#define EAROM_P1START_ACTIVE_LOW
-
 class CER2055
 {
     public:

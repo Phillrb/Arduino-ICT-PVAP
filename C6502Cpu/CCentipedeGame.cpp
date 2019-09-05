@@ -130,8 +130,9 @@ static const RAM_REGION s_ramRegion[] PROGMEM = {
                                                   //    "012", "012345"
     {NO_BANK_SWITCH, 0x0000,      0x03FF,      1, 0x0F, "H2 ", "PrgLwr"}, // Program RAM H2, 2114 (1024 x 4), lower
     {NO_BANK_SWITCH, 0x0000,      0x03FF,      1, 0xF0, "F2 ", "PrgUpr"}, // Program RAM F2, 2114 (1024 x 4), upper
-    /*
-    // reads/writes of video RAM at 0x0400-0x07ff must be synchronous with phi0 clock; not currently supported
+    
+#ifdef SYNCED_6502
+    // reads/writes of video RAM at 0x0400-0x07ff must be synchronous with phi0 clock
     {NO_BANK_SWITCH, 0x0400,      0x04FF,      1, 0x0F, "K7 ", "Video "}, // Video RAM, 2101 256x4 - lower
     {NO_BANK_SWITCH, 0x0500,      0x05FF,      1, 0x0F, "L7 ", "Video "}, // Video RAM, 2101 256x4 - lower
     {NO_BANK_SWITCH, 0x0600,      0x06FF,      1, 0x0F, "M7 ", "Video "}, // Video RAM, 2101 256x4 - lower
@@ -140,7 +141,7 @@ static const RAM_REGION s_ramRegion[] PROGMEM = {
     {NO_BANK_SWITCH, 0x0500,      0x05FF,      1, 0xF0, "L5 ", "Video "}, // Video RAM, 2101 256x4 - upper
     {NO_BANK_SWITCH, 0x0600,      0x06FF,      1, 0xF0, "M5 ", "Video "}, // Video RAM, 2101 256x4 - upper
     {NO_BANK_SWITCH, 0x0700,      0x07FF,      1, 0xF0, "N5 ", "Video "}, // Video RAM, 2101 256x4 - upper
-    */
+#endif
     {0} // end of list
 };
 
@@ -150,13 +151,13 @@ static const RAM_REGION s_ramRegion[] PROGMEM = {
 static const RAM_REGION s_ramRegionByteOnly[] PROGMEM = {
                                                   //    "012", "012345"
     {NO_BANK_SWITCH, 0x0000,      0x03FF,      1, 0xFF, "2HF", "Progrm"}, // Program RAM H2/F2
-    /*
-    // reads/writes of video RAM at 0x0400-0x07ff must be synchronous with phi0 clock; not currently supported
+#ifdef SYNCED_6502
+    // reads/writes of video RAM at 0x0400-0x07ff must be synchronous with phi0 clock
     {NO_BANK_SWITCH, 0x0400,      0x04FF,      1, 0xFF, "K75", "Video "}, // Video RAM K7/K5
     {NO_BANK_SWITCH, 0x0500,      0x05FF,      1, 0xFF, "L75", "Video "}, // Video RAM L7/L5
     {NO_BANK_SWITCH, 0x0600,      0x06FF,      1, 0xFF, "M75", "Video "}, // Video RAM M7/M5
     {NO_BANK_SWITCH, 0x0700,      0x07FF,      1, 0xFF, "N75", "Video "}, // Video RAM N7/N5
-    */
+#endif
     {0} // end of list
 };
 
@@ -222,6 +223,9 @@ static const OUTPUT_REGION s_outputRegion[] PROGMEM = { //                      
 //
 static const CUSTOM_FUNCTION s_customFunction[] PROGMEM = {
     //                                    "0123456789"
+#ifdef SYNCED_6502
+    {CCentipedeGame::videoTest,           "Video Test"},
+#endif
 //    {CCentipedeBaseGame::earomIdle,       "EAROM Idle"},
     {CCentipedeBaseGame::earomReadTest,   "EAROM Read"},
     {CCentipedeBaseGame::earomSerialDump, "EAROM Dump"},
@@ -230,6 +234,55 @@ static const CUSTOM_FUNCTION s_customFunction[] PROGMEM = {
     {NO_CUSTOM_FUNCTION} // end of list
 };
 
+//
+// Custom memory sync/timing strategies
+// TO-DO: store in PROGMEM
+//
+static const MEM_STRATEGY s_memStrategy[] = {
+    // address, length, readStrategy_t, writeStrategy_t
+    { 0x0400, 0x0400, RS_SYNC_PHI0_SKIP_1_PULSE_1_5_MHZ, WS_SYNC_PHI0_SKIP_1_PULSE_1_5_MHZ }, // video RAM
+    { 0x1400, 0x0010, RS_SYNC_PHI0_SKIP_1_PULSE_1_5_MHZ, WS_SYNC_PHI0_SKIP_1_PULSE_1_5_MHZ }, // color RAM
+    { 0, 0 } // end of list
+};
+
+//
+// Basic video test -- fills playfield and color RAM with sequential values
+//
+PERROR
+CCentipedeGame::videoTest(
+                          void *cCentipedeGame
+                          )
+{
+    CCentipedeGame *pThis = (CCentipedeGame *) cCentipedeGame;
+    PERROR error = errorSuccess;
+    UINT16 data16 = 0;
+
+    // fill playfield RAM with sequential characters
+    UINT8 curchar = 0x00;
+    for (UINT32 i = 0x0400; i < 0x07c0; i++)
+    {
+        if (FAILED(error))
+        {
+            break;
+        }
+        error = pThis->m_cpu->memoryWrite(i, (UINT16)curchar);
+        curchar++;
+    }
+
+    // fill color RAM with all 16 colors
+    for (UINT8 i = 0x00; i < 0x10; i++)
+    {
+        if (FAILED(error))
+        {
+            break;
+        }
+        error = pThis->m_cpu->memoryWrite((UINT32)(0x1400 + i), i);
+    }
+
+    pThis->m_cpu->memoryRead(0x0000, &data16); // dummy read so we're not holding the color RAM address on the bus (causes missing lines on display)
+    
+    return error;
+}
 
 IGame*
 CCentipedeGame::createInstanceSet1(
@@ -298,6 +351,7 @@ CCentipedeGame::CCentipedeGame(
                                        s_inputRegion,
                                        s_outputRegion,
                                        s_customFunction,
+                                       s_memStrategy,
                                        s_IRQ_RESET_ADDR,
                                        s_EAROM_WRITE_ADDR,
                                        s_EAROM_CONTROL_ADDR,

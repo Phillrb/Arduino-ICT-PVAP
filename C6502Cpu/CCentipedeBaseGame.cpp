@@ -24,8 +24,6 @@
 //
 
 #include "CCentipedeBaseGame.h"
-#include "C6502Cpu.h"
-#include "C6502ClockMasterCpu.h"
 #include "CRomCheck.h"
 
 CCentipedeBaseGame::CCentipedeBaseGame(
@@ -37,6 +35,7 @@ CCentipedeBaseGame::CCentipedeBaseGame(
                    const INPUT_REGION  *inputRegion,
                    const OUTPUT_REGION *outputRegion,
                    const CUSTOM_FUNCTION *customFunction,
+                   const MEM_STRATEGY  *memStrategy,
                    const UINT32        irqResetAddress,
                    const UINT32        earomWriteBaseAddress,
                    const UINT32        earomControlAddress,
@@ -58,7 +57,7 @@ CCentipedeBaseGame::CCentipedeBaseGame(
     }
     else
     {
-        m_cpu = new C6502Cpu(false);
+        m_cpu = new C6502CpuSync(false, memStrategy);
     }
     
     m_cpu->idle();

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2015, Paul R. Swan
+// Copyright (c) 2019 Warren Ondras
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -22,99 +22,85 @@
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef C6502Cpu_h
-#define C6502Cpu_h
 
-#include "Arduino.h"
-#include "ICpu.h"
-#include "CBus.h"
-#include "CFast8BitBus.h"
-#include "CFastPin.h"
+#ifndef C6502CpuSync_h
+#define C6502CpuSync_h
+
+#include "C6502Cpu.h"
+
+#ifdef ARDUINO_AVR_MEGA2560
+#define SYNCED_6502
+#endif
+
+typedef enum {
+    RS_DEFAULT = 0,
+    RS_SYNC_PHI0_1_5_MHZ,
+    RS_SYNC_PHI0_SKIP_1_PULSE_1_5_MHZ
+} readStrategy_t;
+
+typedef enum {
+    WS_DEFAULT = 0,
+    WS_SYNC_PHI0_1_5_MHZ,
+    WS_SYNC_PHI0_SKIP_1_PULSE_1_5_MHZ
+} writeStrategy_t;
+
+typedef struct _MEM_STRATEGY {
+    const UINT16 startAddress;
+    const UINT16 length;
+    const readStrategy_t readStrategy;
+    const writeStrategy_t writeStrategy;
+} MEM_STRATEGY, *PMEM_STRATEGY;
 
 
-class C6502Cpu : public ICpu
+class C6502CpuSync : public C6502Cpu
 {
     public:
-
+    
         //
         // Constructor
         //
+        C6502CpuSync(
+                 bool dataBusCheck,
+                 const MEM_STRATEGY *memStrategy
+                 );
 
-        C6502Cpu(
-            bool dataBusCheck
-        );
-
-        // ICpu Interface
         //
-
-        virtual
-        PERROR
-        idle(
-        );
-
-        virtual
-        PERROR
-        check(
-        );
-
-        virtual
-        UINT8
-        dataBusWidth(
-            UINT32 address
-        );
-
-        virtual
-        UINT8
-        dataAccessWidth(
-            UINT32 address
-        );
-
-        // Address Space:
-        // 0x00000 -> 0x0FFFF - Memory Mapped Data
+        // Override for standard memory read
         //
-
         virtual
         PERROR
         memoryRead(
-            UINT32 address,
-            UINT16 *data
-        );
+                   UINT32 address,
+                   UINT16 *pData
+                   );
 
+        //
+        // Override for standard memory write
+        //
         virtual
         PERROR
         memoryWrite(
-            UINT32 address,
-            UINT16 data
-        );
+                    UINT32 address,
+                    UINT16 data
+                    );
 
-        virtual
+    private:
+
         PERROR
-        waitForInterrupt(
-            Interrupt interrupt,
-            bool      active,
-            UINT32    timeoutInMs
-        );
+        memRead_SyncPhi0_Skip1Pulse_1_5_Mhz(
+                                    UINT16 readAddress16,
+                                    UINT16 *pData
+                                    );
 
-        virtual
         PERROR
-        acknowledgeInterrupt(
-            UINT16 *response
-        );
+        memWrite_SyncPhi0_Skip1Pulse_1_5_Mhz(
+                                    UINT16 writeAddress16,
+                                    UINT16 data16
+                                    );
 
-        //
-        // C6502Cpu Interface
-        //
-
-    protected:
-
-        bool          m_dataBusCheck;
-
-        CBus          m_busA;
-        CFast8BitBus  m_busD;
-
-        CFastPin      m_pinCLK1o;
-        CFastPin      m_pinCLK2o;
-
+        const MEM_STRATEGY *m_memStrategy;
 };
 
+
 #endif
+

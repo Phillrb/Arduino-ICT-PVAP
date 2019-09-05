@@ -27,6 +27,8 @@
 #define CCentipedeBaseGame_h
 
 #include "CGame.h"
+#include "C6502CpuSync.h"
+#include "C6502ClockMasterCpu.h"
 #include "CER2055.h"
 
 class CCentipedeBaseGame : public CGame
@@ -87,6 +89,7 @@ protected:
                        const INPUT_REGION  *inputRegion,
                        const OUTPUT_REGION *outputRegion,
                        const CUSTOM_FUNCTION *customFunction,
+                       const MEM_STRATEGY  *memStrategy,
                        const UINT32        IrqResetAddress,
                        const UINT32        earomWriteBaseAddress,
                        const UINT32        earomControlAddress,

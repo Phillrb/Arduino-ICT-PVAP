@@ -65,7 +65,7 @@ static const UINT32 s_POKEY_0_ADDR = 0x0400;
 static const UINT32 s_POKEY_1_ADDR = 0x0800;
 
 //
-// ROM regions
+// ROM region
 //
 // Version 1 ROM config
 static const ROM_REGION s_romRegionSet1[] PROGMEM = {
@@ -82,8 +82,8 @@ static const RAM_REGION s_ramRegion[] PROGMEM = {
                                                   //    "012", "012345"
     {NO_BANK_SWITCH, 0x0000,      0x03FF,      1, 0x0F, "2F ", "PrgLwr"}, // Program RAM, 2114 (1024 x 4), lower
     {NO_BANK_SWITCH, 0x0000,      0x03FF,      1, 0xF0, "2E ", "PrgUpr"}, // Program RAM, 2114 (1024 x 4), upper
-    /*
-    // reads/writes of video RAM at 0x1000-0x13ff must be synchronous with phi0 clock; not currently supported
+#ifdef SYNCED_6502
+    // reads/writes of video RAM at 0x1000-0x13ff must be synchronous with phi0 clock
     {NO_BANK_SWITCH, 0x1000,      0x10FF,      1, 0x0F, "2M ", "Video "}, // Video RAM, 2101 256x4 - lower
     {NO_BANK_SWITCH, 0x1100,      0x11FF,      1, 0x0F, "2L ", "Video "}, // Video RAM, 2101 256x4 - lower
     {NO_BANK_SWITCH, 0x1200,      0x12FF,      1, 0x0F, "2K ", "Video "}, // Video RAM, 2101 256x4 - lower
@@ -92,7 +92,7 @@ static const RAM_REGION s_ramRegion[] PROGMEM = {
     {NO_BANK_SWITCH, 0x1100,      0x11FF,      1, 0xF0, "4M ", "Video "}, // Video RAM, 2101 256x4 - upper
     {NO_BANK_SWITCH, 0x1200,      0x12FF,      1, 0xF0, "4L ", "Video "}, // Video RAM, 2101 256x4 - upper
     {NO_BANK_SWITCH, 0x1300,      0x13FF,      1, 0xF0, "4K ", "Video "}, // Video RAM, 2101 256x4 - upper
-    */
+#endif
     {0} // end of list
 };
 
@@ -102,13 +102,13 @@ static const RAM_REGION s_ramRegion[] PROGMEM = {
 static const RAM_REGION s_ramRegionByteOnly[] PROGMEM = {
                                                   //    "012", "012345"
     {NO_BANK_SWITCH, 0x0000,      0x03FF,      1, 0xFF, "2FE", "Progrm"}, // Program RAM 2F/2E
-    /*
-    // reads/writes of video RAM at 0x0400-0x07ff must be synchronous with phi0 clock; not currently supported
+#ifdef SYNCED_6502
+    // reads/writes of video RAM at 0x1000-0x13ff must be synchronous with phi0 clock
     {NO_BANK_SWITCH, 0x1000,      0x10FF,      1, 0xFF, "M N", "Video "}, // Video RAM 2M/4N
     {NO_BANK_SWITCH, 0x1100,      0x11FF,      1, 0xFF, "L M", "Video "}, // Video RAM 2L/4M
     {NO_BANK_SWITCH, 0x1200,      0x12FF,      1, 0xFF, "K L", "Video "}, // Video RAM 2K/4L
     {NO_BANK_SWITCH, 0x1300,      0x13FF,      1, 0xFF, "J K", "Video "}, // Video RAM 2J/4K
-    */
+#endif
     {0} // end of list
 };
 
@@ -118,7 +118,7 @@ static const RAM_REGION s_ramRegionByteOnly[] PROGMEM = {
 static const RAM_REGION s_ramRegionWriteOnly[] PROGMEM = {
     //                                                 "012", "012345"
     // color pallette RAM; may need to be synchronous with phi0 clock to actually work
-    // TO-DO: verify that the RAM physical locations are correct
+    // TO-DO: verify that the RAM physical board locations are correct
     {NO_BANK_SWITCH, 0x2480,      0x248F,     1, 0x0F, "11C", "StpClr"}, // Stamp Color RAM lower, 82S25 (16x4 bipolar)
     {NO_BANK_SWITCH, 0x2480,      0x248F,     1, 0xF0, "11B", "StpClr"}, // Stamp Color RAM upper, 82S25 (16x4 bipolar)
     {NO_BANK_SWITCH, 0x2490,      0x249F,     1, 0x0F, "10A", "MobClr"}, // Motion Object Color RAM lower, 82S25 (16x4 bipolar)
@@ -185,6 +185,17 @@ static const CUSTOM_FUNCTION s_customFunction[] PROGMEM = {
     {NO_CUSTOM_FUNCTION} // end of list
 };
 
+//
+// Custom memory sync/timing strategies
+// TO-DO: store in PROGMEM
+//
+static const MEM_STRATEGY s_memStrategy[] = {
+    // address, length, readStrategy_t, writeStrategy_t
+    { 0x1000, 0x0400, RS_SYNC_PHI0_SKIP_1_PULSE_1_5_MHZ, WS_SYNC_PHI0_SKIP_1_PULSE_1_5_MHZ }, // video RAM
+    { 0x2480, 0x0020, RS_SYNC_PHI0_SKIP_1_PULSE_1_5_MHZ, WS_SYNC_PHI0_SKIP_1_PULSE_1_5_MHZ }, // Stamp color and motion object color RAM
+    { 0, 0 } // end of list
+};
+
 IGame*
 CMillipedeGame::createInstanceSet1(
 )
@@ -210,6 +221,7 @@ CMillipedeGame::CMillipedeGame(
                                        s_inputRegion,
                                        s_outputRegion,
                                        s_customFunction,
+                                       s_memStrategy,
                                        s_IRQ_RESET_ADDR,
                                        s_EAROM_WRITE_ADDR,
                                        s_EAROM_CONTROL_ADDR,

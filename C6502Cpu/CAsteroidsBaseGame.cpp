@@ -100,11 +100,11 @@ CAsteroidsBaseGame::interruptCheck(
     // repeat test a few times
     for (UINT16 i = 0 ; i < maxLoops ; i++)
     {
-        // Wait up to 10ms for IRQ to be active
+        // Wait up to 10ms for NMI to be active
         error = m_cpu->waitForInterrupt(m_interrupt, true, 10);
         if (SUCCESS(error))
         {
-            // Wait just 1ms for interrupt to be inactive
+            // Wait up to 10ms for NMI to be inactive
             error = m_cpu->waitForInterrupt(m_interrupt, false, 10);
         }
         if (FAILED(error))

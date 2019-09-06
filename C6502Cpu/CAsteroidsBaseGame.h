@@ -32,31 +32,28 @@ class CAsteroidsBaseGame : public CGame
 {
     public:
     
-    //Bit masks - used to test inputs etc by masking / selecting specific bits of data
-    static const UINT32 s_MSK_D0 = 0x01;
-    static const UINT32 s_MSK_D1 = 0x02;
-    static const UINT32 s_MSK_D2 = 0x04;
-    static const UINT32 s_MSK_D3 = 0x08;
-    static const UINT32 s_MSK_D4 = 0x10;
-    static const UINT32 s_MSK_D5 = 0x20;
-    static const UINT32 s_MSK_D6 = 0x40;
-    static const UINT32 s_MSK_D7 = 0x80;
+        PERROR interruptCheck(
+        );
     
-    static const UINT32 s_MSK_D0_TO_D3 = 0x0F;
-    static const UINT32 s_MSK_D2_TO_D5 = 0x3C;
-    static const UINT32 s_MSK_D6_D7 = 0xC0;
+        //Bit masks - used to test inputs etc by masking / selecting specific bits of data
+        static const UINT32 s_MSK_D0 = 0x01;
+        static const UINT32 s_MSK_D1 = 0x02;
+        static const UINT32 s_MSK_D2 = 0x04;
+        static const UINT32 s_MSK_D3 = 0x08;
+        static const UINT32 s_MSK_D4 = 0x10;
+        static const UINT32 s_MSK_D5 = 0x20;
+        static const UINT32 s_MSK_D6 = 0x40;
+        static const UINT32 s_MSK_D7 = 0x80;
     
-    static const UINT32 s_MSK_ALL = 0xFF;
+        static const UINT32 s_MSK_D0_TO_D3 = 0x0F;
+        static const UINT32 s_MSK_D2_TO_D5 = 0x3C;
+        static const UINT32 s_MSK_D6_D7 = 0xC0;
     
-    //Active High
-    static const UINT32 s_ACT_Hi = 0x00;
-    //Active Low
-    static const UINT32 s_ACT_Lo = 0x01;
-
-        //
-        // CAsteroidsBaseGame
-        //
+        static const UINT32 s_MSK_ALL = 0xFF;
     
+        static const UINT32 s_ACT_Hi = 0x00; //Active High
+        static const UINT32 s_ACT_Lo = 0x01; //Active Low
+   
     protected:
 
         CAsteroidsBaseGame(

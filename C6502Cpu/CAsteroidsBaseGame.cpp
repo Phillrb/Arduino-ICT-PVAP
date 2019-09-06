@@ -25,8 +25,6 @@
 #include "CAsteroidsBaseGame.h"
 #include "C6502Cpu.h"
 #include "C6502ClockMasterCpu.h"
-#include <DFR_Key.h>
-#include "CRomCheck.h"
 
 //D2 & E2 together cover 0000-03FF - D2 lower E2 upper
 //0000-01FF D0 -> D7 Zero and one page RAM - RW
@@ -73,12 +71,9 @@ CAsteroidsBaseGame::CAsteroidsBaseGame(
     }
 
     m_cpu->idle();
-
-    // VBLANK is on the INT pin (==IRQ0).
-    m_interrupt = ICpu::IRQ0;
-
-    // The interrupt is based on an internal vector
-    m_interruptAutoVector = true;
+    
+    m_interrupt = ICpu::NMI;
+    m_interruptAutoVector = true; // 6502 interrupt is based on an internal vector
 }
 
 
@@ -87,4 +82,35 @@ CAsteroidsBaseGame::~CAsteroidsBaseGame(
 {
     delete m_cpu;
     m_cpu = (ICpu *) NULL;
+}
+
+//
+// Interrupt Test
+//
+// IRQ - not used
+// NMI - fires every 4 ms; cleared automatically
+//
+PERROR
+CAsteroidsBaseGame::interruptCheck(
+)
+{
+    UINT16 maxLoops = 10;
+    PERROR error = errorSuccess;
+    
+    // repeat test a few times
+    for (UINT16 i = 0 ; i < maxLoops ; i++)
+    {
+        // Wait up to 10ms for IRQ to be active
+        error = m_cpu->waitForInterrupt(m_interrupt, true, 10);
+        if (SUCCESS(error))
+        {
+            // Wait just 1ms for interrupt to be inactive
+            error = m_cpu->waitForInterrupt(m_interrupt, false, 10);
+        }
+        if (FAILED(error))
+        {
+            break;
+        }
+    }
+    return error;
 }

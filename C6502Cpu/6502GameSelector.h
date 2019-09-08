@@ -30,6 +30,7 @@
 #include <CCentipedeGame.h>
 #include <CLunarLanderGame.h>
 #include <CMillipedeGame.h>
+#include <CSpaceDuelGame.h>
 
 //
 // The initial selector to select the game to test.
@@ -40,11 +41,11 @@ static const SELECTOR s_gameSelector[] PROGMEM = {//0123456789abcde
     {"T-777   (5)    ",  onSelectGame,    (void*) (CTomahawk777Game::createInstanceSet5),            false},
     {"T-777   (5) clk",  onSelectGame,    (void*) (CTomahawk777Game::createInstanceClockMasterSet5), false},
     {"Asteroids (4)  ",  onSelectGame,    (void*) (CAsteroidsGame::createInstanceSet4),              false},
-    {"Asteroids(4)clk",  onSelectGame,    (void*) (CAsteroidsGame::createInstanceClockMasterSet4),   false},
+    {"Asteroids (4)ck",  onSelectGame,    (void*) (CAsteroidsGame::createInstanceClockMasterSet4),   false},
     {"Asteroids (2)  ",  onSelectGame,    (void*) (CAsteroidsGame::createInstanceSet2),              false},
-    {"Asteroids(2)clk",  onSelectGame,    (void*) (CAsteroidsGame::createInstanceClockMasterSet2),   false},
+    {"Asteroids (2)ck",  onSelectGame,    (void*) (CAsteroidsGame::createInstanceClockMasterSet2),   false},
     {"Asteroids (1)  ",  onSelectGame,    (void*) (CAsteroidsGame::createInstanceSet1),              false},
-    {"Asteroids(1)clk",  onSelectGame,    (void*) (CAsteroidsGame::createInstanceClockMasterSet1),   false},
+    {"Asteroids (1)ck",  onSelectGame,    (void*) (CAsteroidsGame::createInstanceClockMasterSet1),   false},
     {"AstDlx (3)     ",  onSelectGame,    (void*) (CAsteroidsDeluxeGame::createInstanceSet3),        false},
     {"AstDlx (3) clk ",  onSelectGame,    (void*) (CAsteroidsDeluxeGame::createInstanceClockMasterSet3),   false},
     {"AstDlx (2)     ",  onSelectGame,    (void*) (CAsteroidsDeluxeGame::createInstanceSet2),              false},
@@ -55,20 +56,26 @@ static const SELECTOR s_gameSelector[] PROGMEM = {//0123456789abcde
     {"BZone (2) clk  ",  onSelectGame,    (void*) (CBattlezoneGame::createInstanceClockMasterSet2),  false},
     {"BZone (1)      ",  onSelectGame,    (void*) (CBattlezoneGame::createInstanceSet1),             false},
     {"BZone (1) clk  ",  onSelectGame,    (void*) (CBattlezoneGame::createInstanceClockMasterSet1),  false},
-    {"Centipede 1    ",  onSelectGame,    (void*) (CCentipedeGame::createInstanceSet1),              false},
-    {"Centipede 1 clk",  onSelectGame,    (void*) (CCentipedeGame::createInstanceClockMasterSet2),   false},
-    {"Centipede 2    ",  onSelectGame,    (void*) (CCentipedeGame::createInstanceSet2),              false},
-    {"Centipede 2 clk",  onSelectGame,    (void*) (CCentipedeGame::createInstanceClockMasterSet3),   false},
-    {"Centipede 3    ",  onSelectGame,    (void*) (CCentipedeGame::createInstanceSet3),              false},
-    {"Centipede 3 clk",  onSelectGame,    (void*) (CCentipedeGame::createInstanceClockMasterSet4),   false},
-    {"Centipede 4    ",  onSelectGame,    (void*) (CCentipedeGame::createInstanceSet4),              false},
-    {"Centipede 4 clk",  onSelectGame,    (void*) (CCentipedeGame::createInstanceClockMasterSet1),   false},
+    {"Centipede (1)  ",  onSelectGame,    (void*) (CCentipedeGame::createInstanceSet1),              false},
+    {"Centipede (1)ck",  onSelectGame,    (void*) (CCentipedeGame::createInstanceClockMasterSet2),   false},
+    {"Centipede (2)  ",  onSelectGame,    (void*) (CCentipedeGame::createInstanceSet2),              false},
+    {"Centipede (2)ck",  onSelectGame,    (void*) (CCentipedeGame::createInstanceClockMasterSet3),   false},
+    {"Centipede (3)  ",  onSelectGame,    (void*) (CCentipedeGame::createInstanceSet3),              false},
+    {"Centipede (3)ck",  onSelectGame,    (void*) (CCentipedeGame::createInstanceClockMasterSet4),   false},
+    {"Centipede (4)  ",  onSelectGame,    (void*) (CCentipedeGame::createInstanceSet4),              false},
+    {"Centipede (4)ck",  onSelectGame,    (void*) (CCentipedeGame::createInstanceClockMasterSet1),   false},
     {"LLander (2)    ",  onSelectGame,    (void*) (CLunarLanderGame::createInstanceSet2),            false},
     {"LLander (2) clk",  onSelectGame,    (void*) (CLunarLanderGame::createInstanceClockMasterSet2), false},
     {"LLander (1)    ",  onSelectGame,    (void*) (CLunarLanderGame::createInstanceSet1),            false},
     {"LLander (1) clk",  onSelectGame,    (void*) (CLunarLanderGame::createInstanceClockMasterSet1), false},
     {"Millipede      ",  onSelectGame,    (void*) (CMillipedeGame::createInstanceSet1),              false},
     {"Millipede clk  ",  onSelectGame,    (void*) (CMillipedeGame::createInstanceClockMasterSet1),   false},
+    {"SpaceDuel (2)  ",  onSelectGame,    (void*) (CSpaceDuelGame::createInstanceSet2),              false},
+    {"SpaceDuel (2)ck",  onSelectGame,    (void*) (CSpaceDuelGame::createInstanceClockMasterSet2),   false},
+    {"SpaceDuel (1)  ",  onSelectGame,    (void*) (CSpaceDuelGame::createInstanceSet1),              false},
+    {"SpaceDuel (1)ck",  onSelectGame,    (void*) (CSpaceDuelGame::createInstanceClockMasterSet1),   false},
+//    {"SpaceDuel Proto",  onSelectGame,    (void*) (CSpaceDuelGame::createInstanceSet0),              false},
+//    {"SpaceDuel Pr ck",  onSelectGame,    (void*) (CSpaceDuelGame::createInstanceClockMasterSet0),   false},
     { 0, 0 }
 };
 

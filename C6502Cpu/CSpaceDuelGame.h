@@ -34,8 +34,6 @@ class CSpaceDuelGame : public CSpaceDuelBaseGame
         //
         // Constructors for this game.
         //
-        static IGame* createInstanceSet0();
-        static IGame* createInstanceClockMasterSet0();
         static IGame* createInstanceSet1();
         static IGame* createInstanceClockMasterSet1();
         static IGame* createInstanceSet2();
@@ -48,6 +46,7 @@ class CSpaceDuelGame : public CSpaceDuelBaseGame
         //
         CSpaceDuelGame(
             const bool       clockMaster,
+            const ROM_DATA2N *romData2n,
             const ROM_REGION *romRegion
         );
  

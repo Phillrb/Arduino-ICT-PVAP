@@ -66,6 +66,7 @@ class CSpaceDuelBaseGame : public CGame
 
         CSpaceDuelBaseGame(
             const bool          clockMaster,
+            const ROM_DATA2N    *romData2n,
             const ROM_REGION    *romRegion,
             const RAM_REGION    *ramRegion,
             const RAM_REGION    *ramRegionByteOnly,

@@ -41,6 +41,7 @@ static const CUSTOM_FUNCTION s_customFunction[] PROGMEM = {
 
 CSpaceDuelBaseGame::CSpaceDuelBaseGame(
                                        const bool          clockMaster,
+                                       const ROM_DATA2N    *romData2n,
                                        const ROM_REGION    *romRegion,
                                        const RAM_REGION    *ramRegion,
                                        const RAM_REGION    *ramRegionByteOnly,
@@ -56,7 +57,8 @@ CSpaceDuelBaseGame::CSpaceDuelBaseGame(
                                        const UINT16        confirmAddress,
                                        const UINT8         confirmMask,
                                        const bool          confirmActiveLow
-) : CGame( romRegion,
+) : CGame( romData2n,
+           romRegion,
            ramRegion,
            ramRegionByteOnly,
            ramRegionWriteOnly,

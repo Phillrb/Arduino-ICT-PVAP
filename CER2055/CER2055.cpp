@@ -77,6 +77,7 @@
 #define CTL_CS    0x08 // chip select high
 
 #define ER2055_SIZE 0x40 // 64 bytes
+#define DEFAULT_ERR_MSG "E:Hold P1START"
 
 CER2055::CER2055(
     ICpu   *cpu,
@@ -224,8 +225,7 @@ PERROR
 CER2055::erase(
 )
 {
-    // TO-DO:
-    //      find out if unused EAROM contains 0x00 or 0xff bytes (or something else)
+    // TO-DO: find out if unused EAROM contains 0x00 or 0xff bytes (or something else)
     
     PERROR error = errorSuccess;
     static const UINT8 clearVal = 0xff;
@@ -427,5 +427,38 @@ CER2055::serialLoad(
         Serial.end();
     }
 
+    return error;
+}
+
+//
+// Require user to hold a switch closed (such as P1 Start) when initiating a destructive EAROM operation
+//
+PERROR
+CER2055::confirmOperation(
+                          UINT16 switchAddress,
+                          UINT8  switchMask,
+                          bool   switchActiveLow,
+                          String *pFailMessage
+                          )
+{
+    PERROR error = errorSuccess;
+    UINT16 data = 0;
+    
+    error = this->m_cpu->memoryRead((UINT32)switchAddress, &data);
+    if ( FAILED(error)
+        || ( !( (UINT8)data & switchMask ) && !switchActiveLow )
+        || ( ( (UINT8)data & switchMask ) && switchActiveLow ) )
+    {
+        error = errorCustom;
+        error->code = ERROR_FAILED;
+        if (pFailMessage == NULL)
+        {
+            error->description = DEFAULT_ERR_MSG;
+        }
+        else
+        {
+            error->description = *pFailMessage;
+        }
+    }
     return error;
 }

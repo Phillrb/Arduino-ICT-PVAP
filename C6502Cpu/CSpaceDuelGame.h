@@ -22,70 +22,38 @@
 // TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef CER2055_h
-#define CER2055_h
+#ifndef CSpaceDuelGame_h
+#define CSpaceDuelGame_h
 
-#include "ICpu.h"
+#include "CSpaceDuelBaseGame.h"
 
-// Mapping of the C1/C2 control pins to D1/D2 of the CPU bus is game-dependent
-#define EAROM_C1D1_C2D2 0 // Centipede, Dig Dug, Millipede
-#define EAROM_C1D2_C2D1 1 // Asteroids Deluxe, Black Widow, Gravitar, Liberator, Red Baron Space Duel, Tempest
-
-class CER2055
+class CSpaceDuelGame : public CSpaceDuelBaseGame
 {
     public:
 
-        CER2055(
-                      ICpu   *cpu,
-                      UINT16 writeBaseAddress,
-                      UINT16 controlAddress,
-                      UINT16 readAddress,
-                      UINT8  C1C2mapping
-        );
+        //
+        // Constructors for this game.
+        //
+        static IGame* createInstanceSet1();
+        static IGame* createInstanceClockMasterSet1();
+        static IGame* createInstanceSet2();
+        static IGame* createInstanceClockMasterSet2();
 
-        ~CER2055(
-        );
+    private:
 
-        PERROR idle(
-        );
-
-        PERROR read(
-                    UINT8 offset,
-                    UINT8 *data
-                    );
-    
-        PERROR write(
-                     UINT8 offset,
-                     UINT8 data
-        );
-
-        PERROR readTest(
-        );
-
-        PERROR erase(
+        //
+        // Different ROM sets supplied.
+        //
+        CSpaceDuelGame(
+            const bool       clockMaster,
+            const ROM_DATA2N *romData2n,
+            const ROM_REGION *romRegion
         );
  
-        PERROR serialDump(
-        );
- 
-        PERROR serialLoad(
-        );
-    
-        PERROR confirmOperation(
-                                UINT16 switchAddress,
-                                UINT8  switchMask,
-                                bool   switchActiveLow,
-                                String *pFailMessage
-        );
+        ~CSpaceDuelGame();
 
-     private:
-
-        ICpu    *m_cpu;
-        UINT16  m_writeBaseAddress;
-        UINT16  m_controlAddress;
-        UINT16  m_readAddress;
-        UINT8   m_CTL_WRITE;
 };
 
 #endif
+
 

@@ -31,7 +31,7 @@ Simply pull down the Paul Swan repo at https://github.com/prswan/arduino-mega-ic
   - make a note of values on screen when you press 'select', 'left', 'up', 'down', 'right' buttons
   - update '\arduino-mega-ict\libraries\DFR_Key\DFR_Key.cpp' with your values if they are not right
 - Copy contents of '\arduino-mega-ict\libraries' to the Arduino libraries folder on your PC (mine is at 'C:\Program Files\arduino-1.8.13\libraries')
-- Run '\arduino-mega-ict\InCircuitTester6502.InCircuitTester6502.ino' on your Arduino ICT
+- Run '\arduino-mega-ict\InCircuitTester6502\InCircuitTester6502.ino' on your Arduino ICT
 
 Original discussion thread on UKVac:
 http://www.ukvac.com/forum/arduino-incircuit-tester-build-project_topic349525.html
